@@ -20,7 +20,7 @@ norm_natural_params <- function(num_states, num_variables, num_subjects,
   #' @export
   #' @examples
   #' norm_natural_params(2, 2, 2, 2, c(1, 5, 2, 4, 1, 5, 2, 4, 0, 0.6931472, 0,
-  #'   0.4054651, 0, 0.6931472, 0, 0.4054651, -2, -2, 0, 0, 0, 0, 0, 0))
+  #'   0.4054651, 0, 0.6931472, 0, 0.4054651, -2, 0, 0, 0, 0))
 
   ns          <- num_subjects
   mu_start    <- 1
