@@ -1,14 +1,14 @@
-norm_logforward <- function(x, hmm, state_dep_dist_pooled = FALSE) {
-  #' Compute log forward probabilities
-  #'
-  #' This function computes the log forward probabilities of the data based on
-  #' the HMM hmm.
-  #'
-  #' @inheritParams norm_viterbi
-  #'
-  #' @return A list of matrices (one for each subject) of the forward variables.
-  #' @export
+#' Compute log forward probabilities
+#'
+#' This function computes the log forward probabilities of the data based on
+#' the HMM hmm.
+#'
+#' @inheritParams norm_viterbi
+#'
+#' @return A list of matrices (one for each subject) of the forward variables.
+#' @export
 
+norm_logforward <- function(x, hmm, state_dep_dist_pooled = FALSE) {
   n             <- nrow(x)
   num_states    <- hmm$num_states
   num_variables <- hmm$num_variables

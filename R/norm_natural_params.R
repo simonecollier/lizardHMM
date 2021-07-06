@@ -1,27 +1,27 @@
+#' Transform normal HMM parameters from working to natural
+#'
+#' This function transforms the working normal HMM parameters back into the
+#' original format of the natural parameters and outputs them as a list. This
+#' function is the reverse of `norm_working_params()`.
+#'
+#' @inheritParams norm_working_params
+#' @param num_covariates The number of covariates in the data that the
+#'   transition probability depends on.
+#' @param working_params A vector of the working normal parameters for the
+#'   HMM.
+#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#'   state dependent distribution parameters `mu` and `sigma` should be
+#'   treated as equal for all subjects.
+#'
+#' @return A list of the natural paramters.
+#' @export
+#' @examples
+#' norm_natural_params(2, 2, 2, 2, c(1, 5, 2, 4, 1, 5, 2, 4, 0, 0.6931472, 0,
+#'   0.4054651, 0, 0.6931472, 0, 0.4054651, -2, 0, 0, 0, 0))
+
 norm_natural_params <- function(num_states, num_variables, num_subjects,
                                 num_covariates, working_params,
                                 state_dep_dist_pooled = FALSE) {
-  #' Transform normal HMM parameters from working to natural
-  #'
-  #' This function transforms the working normal HMM parameters back into the
-  #' original format of the natural parameters and outputs them as a list. This
-  #' function is the reverse of `norm_working_params()`.
-  #'
-  #' @inheritParams norm_working_params
-  #' @param num_covariates The number of covariates in the data that the
-  #'   transition probability depends on.
-  #' @param working_params A vector of the working normal parameters for the
-  #'   HMM.
-  #' @param state_dep_dist_pooled A logical variable indiacting whether the
-  #'   state dependent distribution parameters `mu` and `sigma` should be
-  #'   treated as equal for all subjects.
-  #'
-  #' @return A list of the natural paramters.
-  #' @export
-  #' @examples
-  #' norm_natural_params(2, 2, 2, 2, c(1, 5, 2, 4, 1, 5, 2, 4, 0, 0.6931472, 0,
-  #'   0.4054651, 0, 0.6931472, 0, 0.4054651, -2, 0, 0, 0, 0))
-
   ns          <- num_subjects
   mu_start    <- 1
   mu_end      <- num_states*num_variables*num_subjects

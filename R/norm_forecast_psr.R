@@ -1,14 +1,14 @@
-norm_forecast_psr <- function(x, hmm, state_dep_dist_pooled = FALSE) {
-  #' Compute forecast normal pseuso-residuals
-  #'
-  #' This function computes the normal forecast pseudo-residuals of the data `x`
-  #'   fitted with `hmm`.
-  #'
-  #' @inheritParams norm_viterbi
-  #'
-  #' @return A list of vectors (one for each subject) of the pseudo-residuals.
-  #' @export
+#' Compute forecast normal pseuso-residuals
+#'
+#' This function computes the normal forecast pseudo-residuals of the data `x`
+#'   fitted with `hmm`.
+#'
+#' @inheritParams norm_viterbi
+#'
+#' @return A list of vectors (one for each subject) of the pseudo-residuals.
+#' @export
 
+norm_forecast_psr <- function(x, hmm, state_dep_dist_pooled = FALSE) {
   n             <- nrow(x)
   num_states    <- hmm$num_states
   num_variables <- hmm$num_variables

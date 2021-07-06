@@ -1,23 +1,23 @@
+#' Compute negative log-likelihood of normal HMM parameters
+#'
+#' This function computes the negative log-likelihood that the given normal
+#' HMM parameters could have generated the data being fit.
+#'
+#' @inheritParams norm_natural_params
+#' @param x The data to be fit with an HMM in the form of a 3D array. The
+#'   first index (row) corresponds to time, the second (column) to the
+#'   variable number, and the third (matrix number) to the subject number.
+#' @param design A list of design matrices for each subject with each row
+#'   indicating the time and each column indicating the value of the
+#'   covariate.
+#'
+#' @return A number indicating the negative loglikelihood
+#' @export
+
 norm_loglikelihood <- function(working_params, x, design,
                                num_states, num_variables, num_subjects,
                                num_covariates,
                                state_dep_dist_pooled = FALSE) {
-  #' Compute negative log-likelihood of normal HMM parameters
-  #'
-  #' This function computes the negative log-likelihood that the given normal
-  #' HMM parameters could have generated the data being fit.
-  #'
-  #' @inheritParams norm_natural_params
-  #' @param x The data to be fit with an HMM in the form of a 3D array. The
-  #'   first index (row) corresponds to time, the second (column) to the
-  #'   variable number, and the third (matrix number) to the subject number.
-  #' @param design A list of design matrices for each subject with each row
-  #'   indicating the time and each column indicating the value of the
-  #'   covariate.
-  #'
-  #' @return A number indicating the negative loglikelihood
-  #' @export
-
   num_time  <- nrow(x)
   pn        <- norm_natural_params(num_states, num_variables, num_subjects,
                                    num_covariates, working_params,

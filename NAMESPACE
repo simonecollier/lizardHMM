@@ -3,6 +3,7 @@
 export(norm_fit_hmm)
 export(norm_forecast_psr)
 export(norm_gamma)
+export(norm_generate_sample)
 export(norm_logforward)
 export(norm_loglikelihood)
 export(norm_natural_params)
