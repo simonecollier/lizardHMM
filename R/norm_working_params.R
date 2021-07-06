@@ -10,6 +10,7 @@ norm_working_params <- function(num_states, num_variables, num_subjects,
   #' @param num_states The number of states in the HMM.
   #' @param num_subjects The number of subjects that generated the data being
   #'   fit with the HMM.
+  #' @param num_subjects The number of variables in the HMM data.
   #' @param mu The means for the normally distributed state dependent
   #'   distributions of the HMM. mu is a list of matrices with each matrix
   #'   corresponding to a different variable in the data being fit. The columns
@@ -20,15 +21,12 @@ norm_working_params <- function(num_states, num_variables, num_subjects,
   #'   each matrix corresponding to a different variable in the data being fit.
   #'   The columns of the matrices correspond to the state number and the rows
   #'   correspond to the subject number.
-  #' @param gamma A list with each element being the transition probability
-  #'   matrix of the HMM for the subject corresponding to that index.
+  #' @param gamma The matrix of regression coefficients for the covariates
+  #'   included in the estimated of the transition probability matrix.
   #' @param delta A list with each element being the initial state distribution
   #'   vector of the HMM for the subject corresponding to that index.
   #' @param stationary A logical variable denoting whether to treat the HMM as
   #'   one with a stationary distribution or without.
-  #' @param gamma_pooled A logical variable indiacting whether the transition
-  #'   probability matrix `gamma` and the resulting stationary distribution
-  #'   `delta` should be the same for all subjects.
 
   tmu     <- numeric()
   tsigma  <- numeric()
