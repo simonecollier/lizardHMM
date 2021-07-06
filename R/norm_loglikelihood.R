@@ -31,7 +31,8 @@ norm_loglikelihood <- function(working_params, x, design,
     }
     P   <- rep(1, num_states)
     for (j in 1:num_variables) {
-      P <- P*dnorm(x[1, j, i], pn$mu[[j]][s_ind, ], pn$sigma[[j]][s_ind, ])
+      P <- P*stats::dnorm(x[1, j, i], pn$mu[[j]][s_ind, ],
+                          pn$sigma[[j]][s_ind, ])
     }
     forward_probs     <- pn$delta[[i]]*P
     sum_forward_probs <- sum(forward_probs)
@@ -42,7 +43,8 @@ norm_loglikelihood <- function(working_params, x, design,
       P     <- rep(1, num_states)
       for (j in 1:num_variables) {
         if (!is.na(x[t, j, i])) {
-          P <- P*dnorm(x[t, j, i], pn$mu[[j]][s_ind, ], pn$sigma[[j]][s_ind, ])
+          P <- P*stats::dnorm(x[t, j, i], pn$mu[[j]][s_ind, ],
+                              pn$sigma[[j]][s_ind, ])
         }
       }
       forward_probs     <- forward_probs %*% gamma[[i]][[t]]*P

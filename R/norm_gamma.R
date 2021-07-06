@@ -22,7 +22,7 @@ norm_gamma <- function(num_states, num_subjects, num_time, beta, design) {
     for (t in num_time) {
       eta             <- matrix(0, nrow = num_states, ncol = num_states)
       gamma[[i]][[t]] <- matrix(0, nrow = num_states, ncol = num_states)
-      betarow <- 1
+      betarow         <- 1
       for (k in num_states) {
         for (l in num_states) {
           if (k != l) {
