@@ -2,29 +2,34 @@ norm_working_params <- function(num_states, num_variables, num_subjects,
                                 mu, sigma, beta, delta) {
   #' Transform normal HMM parameters from natural to working
   #'
-  #' The `norm_working_params` function transforms the natural normal HMM parameters that have
-  #' additional constraints into working parameters that incorporate the
-  #' constraints. The output is a single vector which includes all the working
-  #' parameters.
+  #' The `norm_working_params` function transforms the natural normal HMM
+  #' parameters that have additional constraints into working parameters that
+  #' incorporate the constraints. The output is a single vector which includes
+  #' all the working parameters.
   #'
-  #' @param num_states The number of states in the HMM.
-  #' @param num_subjects The number of subjects that generated the data being
-  #'   fit with the HMM.
-  #' @param num_variables The number of variables in the HMM data.
-  #' @param mu The means for the normally distributed state dependent
-  #'   distributions of the HMM. mu is a list of matrices with each matrix
-  #'   corresponding to a different variable in the data being fit. The columns
-  #'   of the matrices correspond to the state number and the rows correspond to
-  #'   the subject number.
-  #' @param sigma The standard deviations for the normally distributed state
-  #'   dependent distributions of the HMM. sigma is a list of matrices with
-  #'   each matrix corresponding to a different variable in the data being fit.
-  #'   The columns of the matrices correspond to the state number and the rows
-  #'   correspond to the subject number.
-  #' @param beta The matrix of regression coefficients for the covariates
-  #'   included in the estimated of the transition probability matrix.
-  #' @param delta A list with each element being the initial state distribution
-  #'   vector of the HMM for the subject corresponding to that index.
+  #' @param num_states The number of states in the desired HMM.
+  #' @param num_variables The number of variables in the data.
+  #' @param num_subjects The number of subjects that generated the data.
+  #' @param mu A list of matrices containing the means of the state dependent
+  #'   normal distribution. Each matrix corresponds to a different variable,
+  #'   each row corresponds to a different subject and each column corresponds
+  #'   to a different state.
+  #' @param sigma A list of matrices containing the standard deviations of the
+  #'  state dependent normal distribution. Each matrix corresponds to a
+  #'  different variable, each row corresponds to a different subject and each
+  #'  column corresponds to a different state.
+  #' @param beta A matrix of regression coefficients.
+  #' @param delta A list of the initial state distributions for each subject.
+  #'
+  #' @return A single vector containing transformed parameters.
+  #'
+  #' @examples
+  #' norm_working_params(2, 2, 2, list(matrix(c(1, 5, 2, 4), 2, 2,
+  #'   byrow = TRUE), matrix(c(1, 5, 2, 4), 2, 2, byrow = TRUE)),
+  #'   list(matrix(c(1, 2, 1, 1.5), 2, 2, byrow = TRUE),
+  #'   matrix(c(1, 2, 1, 1.5), 2, 2, byrow = TRUE)),
+  #'   matrix(c(-2, -2, 0, 0, 0, 0), nrow = 2, ncol = 3),
+  #'   list(c(1/2, 1/2), c(1/2, 1/2)))
 
   tmu     <- numeric()
   tsigma  <- numeric()

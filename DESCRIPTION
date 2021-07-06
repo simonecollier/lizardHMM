@@ -1,15 +1,17 @@
 Package: lizardHMM
-Title: What the Package Does (One Line, Title Case)
+Title: Fitting Lizard Movement Data with HMMs
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person("Simone",
+           "Collier",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+           email = "simonekcollier@gmail.com")
+Description: Hidden Markov Models have been used with animal movement data of
+    all sorts. This package allows for the fitting of data with multiple 
+    variables and multiple subjects with a multi-state HMM. This fitting can 
+    include time-dependent covariates in the estimation of the transition 
+    probablility matrix.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
