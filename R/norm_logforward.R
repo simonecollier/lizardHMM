@@ -1,0 +1,50 @@
+norm_logforward <- function(x, hmm, state_dep_dist_pooled = FALSE) {
+  #' Compute log forward probabilities
+  #'
+  #' This function computes the log forward probabilities of the data based on
+  #' the HMM hmm.
+  #'
+  #' @inheritParams norm_viterbi
+  #'
+  #' @return A list of matrices (one for each subject) of the forward variables.
+  #' @export
+
+  n             <- nrow(x)
+  num_states    <- hmm$num_states
+  num_variables <- hmm$num_variables
+  num_subjects  <- hmm$num_subjects
+  lalpha        <- list()
+  for (i in 1:num_subjects) {
+    s_ind   <- i
+    if (state_dep_dist_pooled) {
+      s_ind <- 1
+    }
+    lalpha[[i]] <- matrix(NA, nrow = num_states, ncol = n)
+    P           <- rep(1, num_states)
+    for (j in 1:num_variables) {
+      P <- P*stats::dnorm(x[1, j, i], hmm$mu[[j]][s_ind, ],
+                          hmm$sigma[[j]][s_ind, ])
+    }
+    forward_probs     <- hmm$delta[[i]]*P
+    sum_forward_probs <- sum(forward_probs)
+    loglikelihood     <- log(sum_forward_probs)
+    forward_probs     <- forward_probs/sum_forward_probs
+    lalpha[[i]][, 1]  <- loglikelihood + log(forward_probs)
+
+    for (t in 2:n) {
+      P     <- rep(1, num_states)
+      for (j in 1:num_variables) {
+        if (!is.na(x[t, j, i])) {
+          P <- P*stats::dnorm(x[t, j, i], hmm$mu[[j]][s_ind, ],
+                              hmm$sigma[[j]][s_ind, ])
+        }
+      }
+      forward_probs     <- forward_probs %*% hmm$gamma[[i]][[t]]*P
+      sum_forward_probs <- sum(forward_probs)
+      loglikelihood     <- loglikelihood + log(sum_forward_probs)
+      forward_probs     <- forward_probs/sum_forward_probs
+      lalpha[[i]][, t]  <- loglikelihood + log(forward_probs)
+    }
+  }
+  lalpha
+}
