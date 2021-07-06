@@ -4,15 +4,20 @@
 \alias{norm_gamma}
 \title{Compute transition probability matrix}
 \usage{
-norm_gamma(num_states, beta, design_vec)
+norm_gamma(num_states, num_subjects, num_time, beta, design)
 }
 \arguments{
 \item{num_states}{The number of states in the desired HMM.}
 
+\item{num_subjects}{The number of subjects that generated the data.}
+
+\item{num_time}{A value indicating the length of the data.}
+
 \item{beta}{A matrix of regression coefficients.}
 
-\item{design_vec}{A vector from the design matrix with indicates the values
-of the covariates.}
+\item{design}{A list of design matrices, one for each subject which
+indicate the values of the each of the covariates (column) at each point
+in time (row).}
 }
 \value{
 A matrix.
@@ -21,7 +26,4 @@ A matrix.
 This function computes the time dependent transition probability matrix
 from the corresponding vector \code{design_vec}  and the matrix of regression
 coefficients \code{beta}.
-}
-\examples{
-norm_gamma(2, matrix(c(-2, 0, 0)), c(1, 0, 25))
 }

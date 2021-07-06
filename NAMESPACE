@@ -3,5 +3,6 @@
 export(norm_gamma)
 export(norm_loglikelihood)
 export(norm_natural_params)
+export(norm_viterbi)
 export(norm_working_params)
 export(split_vec)

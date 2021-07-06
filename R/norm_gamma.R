@@ -13,8 +13,6 @@ norm_gamma <- function(num_states, num_subjects, num_time, beta, design) {
   #'
   #' @return A matrix.
   #' @export
-  #' @examples
-  #' norm_gamma(2, matrix(c(-2, 0, 0)), c(1, 0, 25))
 
   gamma <- list()
   for (i in num_subjects) {
