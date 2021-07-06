@@ -48,6 +48,6 @@ all the working parameters.
 norm_working_params(2, 2, 2, list(matrix(c(1, 5, 2, 4), 2, 2,
   byrow = TRUE), matrix(c(1, 5, 2, 4), 2, 2, byrow = TRUE)),
   list(matrix(c(1, 2, 1, 1.5), 2, 2, byrow = TRUE), matrix(c(1, 2, 1, 1.5),
-  2, 2, byrow = TRUE)), matrix(c(-2, -2, 0, 0, 0, 0), nrow = 2, ncol = 3),
+  2, 2, byrow = TRUE)), matrix(c(-2, 0, 0), nrow = 1, ncol = 3),
   list(c(1/2, 1/2), c(1/2, 1/2)))
 }
