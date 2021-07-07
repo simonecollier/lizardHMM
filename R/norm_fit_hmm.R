@@ -29,7 +29,7 @@ norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                          mu0, sigma0, beta0, delta0,
                          state_dep_dist_pooled = FALSE) {
   num_time <- nrow(x)
-  working_params <- norm_working_params(num_states, num_subjects,
+  working_params <- norm_working_params(num_states, num_variables, num_subjects,
                                         mu0, sigma0, beta0, delta0)
   hmm <- stats::nlm(norm_loglikelihood,
                     working_params,
@@ -89,9 +89,9 @@ norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
        num_subjects = num_subjects,
        mu = pn$mu,
        sigma = pn$sigma,
-       gamma = gamma,
        delta = pn$delta,
        beta = pn$beta,
+       gamma = gamma,
        code = hmm$code,
        max_loglikelihood = hmm$minimum)
 }

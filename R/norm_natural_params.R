@@ -53,11 +53,11 @@ norm_natural_params <- function(num_states, num_variables, num_subjects,
       delta[[i]] = 1
       return(list(mu = mu, sigma = sigma, gamma = gamma, delta = delta))
     }
-    d <- split_vec(working_params, delta_start, delta_end, num_states - 1)
-    for (i in 1:num_subjects) {
-      foo        <- c(1, exp(d[[i]]))
-      delta[[i]] <- foo/sum(foo)
-    }
+  }
+  d <- split_vec(working_params, delta_start, delta_end, num_states - 1)
+  for (i in 1:num_subjects) {
+    foo        <- c(1, exp(d[[i]]))
+    delta[[i]] <- foo/sum(foo)
   }
   list(mu = mu, sigma = sigma, beta = beta, delta = delta)
 }
