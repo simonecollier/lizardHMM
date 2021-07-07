@@ -52,13 +52,13 @@ hmm1 <- list(num_states = 3,
                        matrix(c(-12, -7, 0), ncol = 3, nrow = 1, byrow = TRUE)),
              sigma = list(matrix(c(3, 1, 1.5), ncol = 3, nrow = 1, byrow = TRUE), 
                           matrix(c(1, 3, 2), ncol = 3, nrow = 1, byrow = TRUE)),
-             beta  = matrix(c(1, 2, 0.1,
-                              1, 2.5, 0.4,
-                              1, 4, 1,
-                              1, 4.2, 1.2,
-                              1, 5, 2,
-                              1, 5.1, 2.4), ncol = 3, nrow = 6, byrow = TRUE),
-             delta = list(c(0.3, 0.2, 0.5)))
+             beta  = matrix(c(0.01, 0.02, 0.001,
+                              0.01, 0.03, 0.004,
+                              0.01, 0.01, 0.003,
+                              0.01, 0.04, 0.002,
+                              0.01, 0.01, 0.004,
+                              0.01, 0.03, 0.001), ncol = 3, nrow = 6, byrow = TRUE),
+             delta = list(c(0.3, 0.02, 0.5)))
 
 num_sample <- 1000
 
@@ -66,7 +66,7 @@ design           <- list(matrix(0, nrow = 1000, ncol = 3))
 design[[1]][, 1] <- 1 # First column is the intercept
 design[[1]][, 2] <- sample(c(0, 1), size = 1000, 
                            prob = c(0.3, 0.7), replace = TRUE)
-design[[1]][, 3] <- rnorm(1000, mean = 10, sd = 2)
+design[[1]][, 3] <- rnorm(1000, mean = 5, sd = 1)
 
 # norm_gamma(hmm1$num_states, hmm1$num_subjects, num_sample, hmm1$beta, design)
 
@@ -98,7 +98,8 @@ beta0 <- matrix(c(-2, 0, 0,
 delta0 <- list(c(1/3, 1/3, 1/3))
 
 hmm_fit <- norm_fit_hmm(x, design, num_states, num_variables, num_subjects,
-                        num_covariates, mu0, sigma0, beta0, delta0)
+                        num_covariates, mu0, sigma0, beta0, delta0,
+                        iterlim = 200)
 hmm_fit
 ```
 
