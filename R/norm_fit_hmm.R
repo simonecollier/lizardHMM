@@ -27,7 +27,7 @@
 norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                          num_covariates,
                          mu0, sigma0, beta0, delta0,
-                         state_dep_dist_pooled = FALSE) {
+                         state_dep_dist_pooled = FALSE, iterlim = 100) {
   num_time <- nrow(x)
   working_params <- norm_working_params(num_states, num_variables, num_subjects,
                                         mu0, sigma0, beta0, delta0)
@@ -39,7 +39,8 @@ norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                     num_variables = num_variables,
                     num_subjects = num_subjects,
                     num_covariates = num_covariates,
-                    state_dep_dist_pooled = state_dep_dist_pooled)
+                    state_dep_dist_pooled = state_dep_dist_pooled,
+                    iterlim = iterlim)
                     # hessian = hessian
   pn    <- norm_natural_params(num_states = num_states,
                                num_variables = num_variables,
