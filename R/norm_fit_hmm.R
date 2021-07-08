@@ -18,6 +18,10 @@
 #' @param delta0 A list with each element being the starting initial state
 #'   distribution vector of the HMM for the subject corresponding to that
 #'   index.
+#' @param iterlim A value indicating the number of iterations `nlm()` should run
+#'   before exiting.
+#' @param hessian A logical variable indicating whether to compute the hessian
+#'   at the minimum.
 #'
 #' @return A list of parameters that specify the fitted normal HMM, including
 #'   `num_states`, `num_variables`, `num_subjects`, `mu`, `sigma`, `gamma`,
@@ -27,7 +31,8 @@
 norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                          num_covariates,
                          mu0, sigma0, beta0, delta0,
-                         state_dep_dist_pooled = FALSE, iterlim = 100) {
+                         state_dep_dist_pooled = FALSE, iterlim = 100,
+                         hessian = FALSE) {
   num_time <- nrow(x)
   working_params <- norm_working_params(num_states, num_variables, num_subjects,
                                         mu0, sigma0, beta0, delta0)
@@ -40,8 +45,8 @@ norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                     num_subjects = num_subjects,
                     num_covariates = num_covariates,
                     state_dep_dist_pooled = state_dep_dist_pooled,
-                    iterlim = iterlim)
-                    # hessian = hessian
+                    iterlim = iterlim,
+                    hessian = hessian)
   pn    <- norm_natural_params(num_states = num_states,
                                num_variables = num_variables,
                                num_subjects = num_subjects,
@@ -50,41 +55,34 @@ norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                                state_dep_dist_pooled = state_dep_dist_pooled)
   gamma <- norm_gamma(num_states, num_subjects, num_time, pn$beta, design)
 
-  # if (hessian) {
-  #   h <- hmm$hessian
-  #   if (det(h) != 0) {
-  #     h <- solve(h)
-  #     jacobian <- norm_jacobian(num_states, num_variables, num_subjects,
-  #                               hmm$estimate, pn,
-  #                               state_dep_dist_pooled = state_dep_dist_pooled)
-  #     h <- t(jacobian)%*%h%*%jacobian
-  #   }
-  # }
-
-  # if ((hessian) & (det(hmm$hessian) != 0)) {
-  #   list(num_states = num_states,
-  #        num_variables = num_variables,
-  #        num_subjects = num_subjects,
-  #        mu = pn$mu,
-  #        sigma = pn$sigma,
-  #        gamma = gamma,
-  #        delta = pn$delta,
-  #        code = hmm$code,
-  #        max_loglikelihood = hmm$minimum,
-  #        inverse_hessian = h)
-  # } else if (hessian) {
-  #   list(num_states = num_states,
-  #        num_variables = num_variables,
-  #        num_subjects = num_subjects,
-  #        mu = pn$mu,
-  #        sigma = pn$sigma,
-  #        gamma = gamma,
-  #        delta = pn$delta,
-  #        code = hmm$code,
-  #        max_loglikelihood = hmm$minimum,
-  #        hessian = hmm$hessian,
-  #        determinant = det(hmm$hessian))
-  # }
+  if (hessian) {
+    h <- hmm$hessian
+    if (det(h) != 0) {
+      h <- solve(h)
+      return(list(num_states = num_states,
+                  num_variables = num_variables,
+                  num_subjects = num_subjects,
+                  mu = pn$mu,
+                  sigma = pn$sigma,
+                  beta = pn$beta,
+                  delta = pn$delta,
+                  gamma = gamma,
+                  code = hmm$code,
+                  max_loglikelihood = hmm$minimum,
+                  inverse_hessian = h))
+    }
+    return(list(num_states = num_states,
+                num_variables = num_variables,
+                num_subjects = num_subjects,
+                mu = pn$mu,
+                sigma = pn$sigma,
+                beta = pn$beta,
+                delta = pn$delta,
+                gamma = gamma,
+                code = hmm$code,
+                max_loglikelihood = hmm$minimum,
+                hessian = hmm$hessian))
+  }
   list(num_states = num_states,
        num_variables = num_variables,
        num_subjects = num_subjects,
