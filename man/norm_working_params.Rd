@@ -19,7 +19,7 @@ norm_working_params(
 
 \item{num_variables}{The number of variables in the data.}
 
-\item{num_subjects}{The number of subjects that generated the data.}
+\item{num_subjects}{The number of subjects/trials that generated the data.}
 
 \item{mu}{A list of matrices containing the means of the state dependent
 normal distribution. Each matrix corresponds to a different variable,
@@ -31,23 +31,32 @@ state dependent normal distribution. Each matrix corresponds to a
 different variable, each row corresponds to a different subject and each
 column corresponds to a different state.}
 
-\item{beta}{A matrix of regression coefficients.}
+\item{beta}{A matrix of regression coefficients for the effect of the
+covariates on the transition probability matrix \code{gamma}.}
 
 \item{delta}{A list of the initial state distributions for each subject.}
 }
 \value{
-A single vector containing transformed parameters.
+A single vector containing working parameters.
 }
 \description{
-The \code{norm_working_params} function transforms the natural normal HMM
-parameters that have additional constraints into working parameters that
-incorporate the constraints. The output is a single vector which includes
-all the working parameters.
+The function transforms the natural normal HMM parameters that have
+additional constraints into working parameters that incorporate the
+constraints.
 }
 \examples{
-norm_working_params(2, 2, 2, list(matrix(c(1, 5, 2, 4), 2, 2,
-  byrow = TRUE), matrix(c(1, 5, 2, 4), 2, 2, byrow = TRUE)),
-  list(matrix(c(1, 2, 1, 1.5), 2, 2, byrow = TRUE), matrix(c(1, 2, 1, 1.5),
-  2, 2, byrow = TRUE)), matrix(c(-2, 0, 0), nrow = 1, ncol = 3),
-  list(c(1/2, 1/2), c(1/2, 1/2)))
+# define values of parameters
+num_states    <- 2
+num_variables <- 2
+num_subjects  <- 2
+mu            <- list(matrix(c(1, 5, 2, 4), 2, 2, byrow = TRUE),
+                      matrix(c(1, 5, 2, 4), 2, 2, byrow = TRUE))
+sigma         <- list(matrix(c(1, 2, 1, 1.5), 2, 2, byrow = TRUE),
+                      matrix(c(1, 2, 1, 1.5), 2, 2, byrow = TRUE))
+beta          <- matrix(c(-2, 0, 0), nrow = 1, ncol = 3)
+delta         <- list(c(1/2, 1/2), c(1/2, 1/2))
+
+#transform to working parametes
+norm_working_params(num_states, num_variables, num_subjects,
+                    mu, sigma, beta, delta)
 }

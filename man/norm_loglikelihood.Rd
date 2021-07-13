@@ -31,10 +31,10 @@ covariate.}
 
 \item{num_variables}{The number of variables in the data.}
 
-\item{num_subjects}{The number of subjects that generated the data.}
+\item{num_subjects}{The number of subjects/trials that generated the data.}
 
 \item{num_covariates}{The number of covariates in the data that the
-transition probability depends on.}
+transition probability matrix depends on.}
 
 \item{state_dep_dist_pooled}{A logical variable indiacting whether the
 state dependent distribution parameters \code{mu} and \code{sigma} should be

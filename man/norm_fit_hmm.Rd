@@ -33,10 +33,10 @@ covariate.}
 
 \item{num_variables}{The number of variables in the data.}
 
-\item{num_subjects}{The number of subjects that generated the data.}
+\item{num_subjects}{The number of subjects/trials that generated the data.}
 
 \item{num_covariates}{The number of covariates in the data that the
-transition probability depends on.}
+transition probability matrix depends on.}
 
 \item{mu0}{The starting values for the means of the normally distributed
 state dependent distributions of the HMM. \code{mu0} is a list of matrices,
@@ -50,7 +50,8 @@ is a list of matrices, each matrix corresponding to a different variable
 in the data being fit. The columns of the matrices correspond to the
 state number and the rows correspond to the subject number.}
 
-\item{beta0}{A matrix of regression coefficients.}
+\item{beta0}{A matrix of the initial regression coefficients for the effect
+of the covariates on the transition probability matrix \code{gamma}.}
 
 \item{delta0}{A list with each element being the starting initial state
 distribution vector of the HMM for the subject corresponding to that

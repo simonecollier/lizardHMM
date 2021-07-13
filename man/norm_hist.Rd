@@ -7,14 +7,20 @@
 norm_hist(
   sample,
   num_states,
-  num_subjects,
   num_variables,
+  num_subjects,
   hmm,
   width = 1,
   x_step = 0.2
 )
 }
 \arguments{
+\item{num_states}{The number of states in the desired HMM.}
+
+\item{num_variables}{The number of variables in the data.}
+
+\item{num_subjects}{The number of subjects/trials that generated the data.}
+
 \item{x_step}{}
 }
 \value{

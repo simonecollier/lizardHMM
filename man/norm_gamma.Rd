@@ -9,18 +9,20 @@ norm_gamma(num_states, num_subjects, num_time, beta, design)
 \arguments{
 \item{num_states}{The number of states in the desired HMM.}
 
-\item{num_subjects}{The number of subjects that generated the data.}
+\item{num_subjects}{The number of subjects/trials that generated the data.}
 
 \item{num_time}{A value indicating the length of the data.}
 
-\item{beta}{A matrix of regression coefficients.}
+\item{beta}{A matrix of regression coefficients for the effect of the
+covariates on the transition probability matrices \code{gamma}.}
 
 \item{design}{A list of design matrices, one for each subject which
 indicate the values of the each of the covariates (column) at each point
 in time (row).}
 }
 \value{
-A matrix.
+A list containing a list for each subject/trial of the transition
+probability matrices at each time step.
 }
 \description{
 This function computes the time dependent transition probability matrix
