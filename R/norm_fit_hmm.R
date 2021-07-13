@@ -58,7 +58,7 @@ norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
   if (state_dep_dist_pooled) {
     d <- num_states - 1
   } else {
-    d <- (num_staes - 1)*num_subjects
+    d <- (num_states - 1)*num_subjects
   }
 
   if (hessian) {
