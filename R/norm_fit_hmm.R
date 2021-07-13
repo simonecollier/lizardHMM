@@ -55,12 +55,6 @@ norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                                state_dep_dist_pooled = state_dep_dist_pooled)
   gamma <- norm_gamma(num_states, num_subjects, num_time, pn$beta, design)
 
-  if (state_dep_dist_pooled) {
-    d <- num_states - 1
-  } else {
-    d <- (num_states - 1)*num_subjects
-  }
-
   if (hessian) {
     h <- hmm$hessian
     if (num_states != 1) {
