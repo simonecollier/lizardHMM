@@ -155,6 +155,9 @@ norm_ci <- function(hmm, state_dep_dist_pooled = FALSE, n = 100, level= 0.975,
                                      num_covariates, sample,
                                      state_dep_dist_pooled)
   }
+  if (raw_sample) {
+    return(natural)
+  }
   for (t in 1:len_n) {
     upper[t] <- quantile(natural[, t], probs = level, na.rm = TRUE)
     lower[t] <- quantile(natural[, t], probs = 1 - level, na.rm = TRUE)
@@ -162,9 +165,6 @@ norm_ci <- function(hmm, state_dep_dist_pooled = FALSE, n = 100, level= 0.975,
   estimate <- norm_natural_vec(num_states, num_variables, num_subjects,
                                num_covariates, working_params,
                                state_dep_dist_pooled)
-  if (raw_sample) {
-    return(natural)
-  }
   norm_ci_data(num_states, num_variables, num_subjects, num_covariates,
                estimate, upper, lower, state_dep_dist_pooled = FALSE)
 }
