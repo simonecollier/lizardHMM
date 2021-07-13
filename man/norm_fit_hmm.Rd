@@ -15,7 +15,9 @@ norm_fit_hmm(
   sigma0,
   beta0,
   delta0,
-  state_dep_dist_pooled = FALSE
+  state_dep_dist_pooled = FALSE,
+  iterlim = 100,
+  hessian = FALSE
 )
 }
 \arguments{
@@ -57,6 +59,12 @@ index.}
 \item{state_dep_dist_pooled}{A logical variable indiacting whether the
 state dependent distribution parameters \code{mu} and \code{sigma} should be
 treated as equal for all subjects.}
+
+\item{iterlim}{A value indicating the number of iterations \code{nlm()} should run
+before exiting.}
+
+\item{hessian}{A logical variable indicating whether to compute the hessian
+at the minimum.}
 }
 \value{
 A list of parameters that specify the fitted normal HMM, including
