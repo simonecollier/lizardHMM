@@ -102,9 +102,6 @@ norm_ci_data <- function(num_states, num_variables, num_subjects,
 }
 
 
-
-
-
 #' Compute the confidence intervals
 #'
 #' This function computes the standard errors of the fitted HMM parameters
@@ -133,6 +130,14 @@ norm_ci <- function(hmm, state_dep_dist_pooled = FALSE, n = 100, level= 0.975,
   num_covariates <- hmm$num_covariates
   working_sd     <- sqrt(diag(hmm$inverse_hessian))
   working_params <- hmm$working_params
+  if (num_states != 1) {
+    if (state_dep_dist_pooled) {
+      d <- num_states - 1
+    } else {
+      d <- (num_states - 1)*num_subjects
+    }
+    working_params <- working_params[1:(length(working_params) - d)]
+  }
   len_w          <- length(working_sd)
   sample         <- rnorm(len_w, mean = hmm$working_params, sd = working_sd)
   nat            <- norm_natural_vec(num_states, num_variables, num_subjects,
