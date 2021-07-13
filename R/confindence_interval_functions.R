@@ -60,8 +60,6 @@ norm_ci_data <- function(num_states, num_variables, num_subjects,
   sigma_start <- mu_end + 1
   beta_start  <- sigma_end + 1
   beta_end    <- sigma_end + (num_states^2 - num_states)*(num_covariates + 1)
-  delta_start <- beta_end + 1
-  delta_end   <- length(upper_vec)
 
   mu_estimate    <- split_vec(estimate_vec, mu_start, mu_end, mu_len)
   mu_upper       <- split_vec(upper_vec, mu_start, mu_end, mu_len)
@@ -100,13 +98,7 @@ norm_ci_data <- function(num_states, num_variables, num_subjects,
                         upper = beta_upper,
                         lower = beta_lower)
 
-  delta_estimate <- split_vec(estimate_vec, delta_start, delta_end, num_states)
-  delta_upper    <- split_vec(upper_vec, delta_start, delta_end, num_states)
-  delta_lower    <- split_vec(lower_vec, delta_start, delta_end, num_states)
-  delta          <- list(estimate = delta_estimate,
-                         upper = delta_upper,
-                         lower = delta_lower)
-  list(mu = mu, sigma = sigma, beta = beta, delta = delta)
+  list(mu = mu, sigma = sigma, beta = beta)
 }
 
 
