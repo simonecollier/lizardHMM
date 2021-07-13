@@ -156,7 +156,27 @@ norm_ci <- function(hmm, state_dep_dist_pooled = FALSE, n = 100, level= 0.975,
                                      state_dep_dist_pooled)
   }
   if (raw_sample) {
-    return(natural)
+    mu_start    <- 1
+    mu_end      <- num_states*num_variables*num_subjects
+    sigma_end   <- mu_end + num_states*num_variables*num_subjects
+    mu_len      <- sigma_len <- num_subjects*num_states
+    if (state_dep_dist_pooled) {
+      mu_end    <- num_states*num_variables
+      sigma_end <- mu_end + num_states*num_variables
+      mu_len    <- sigma_len <- num_states
+    }
+    sigma_start <- mu_end + 1
+    sample      <- list()
+    for (l in 1:n) {
+      mu    <- split_vec(natural[l, ], mu_start, mu_end, mu_len)
+      sigma <- split_vec(natural[l, ], sigma_start, sigma_end, sigma_len)
+      for (j in 1:num_variables) {
+        mu[[j]]    <- matrix(mu[[j]], ncol = num_states, byrow = TRUE)
+        sigma[[j]] <- matrix(sigma[[j]], ncol = num_states, byrow = TRUE)
+      }
+      sample[[l]] <- list(mu = mu, sigma = sigma)
+    }
+    return(sample)
   }
   for (t in 1:len_n) {
     upper[t] <- quantile(natural[, t], probs = level, na.rm = TRUE)
@@ -185,27 +205,24 @@ norm_ci <- function(hmm, state_dep_dist_pooled = FALSE, n = 100, level= 0.975,
 #' @export
 #' @importFrom stats dnorm quantile
 norm_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
-                              sample_params, state_dep_dist_pooled = FALSE,
+                              sample, state_dep_dist_pooled = FALSE,
                               x_step = 0.2, n = 100, level = 0.975) {
-  conf_intervals <- list()
-  ns             <- num_subjects
-  if (state_dep_dist_pooled) {
-    ns <- 1
-  }
-  mu_ind         <- 1
-  sigma_ind      <- ns*num_variables*num_states
-  for (j in 1:num_variables) {
-    for (i in 1:ns) {
-      conf_intervals[[i]] <- list()
+  conf_intervals        <- list()
+  for (i in 1:num_subjects) {
+    conf_intervals[[i]] <- list()
+    s_ind   <- i
+    if (state_dep_dist_pooled) {
+      s_ind <- 1
+    }
+    for (j in 1:num_variables) {
       range       <- seq(min(x[, j, i]), max(x[, j, i]), length.out = 100)
       xc          <- length(range)
       density.lst <- list()
       for (k in 1:num_states) {
         densities <- matrix(numeric(xc*n), ncol = xc, nrow = n)
-        mu_ind    <- mu_ind + 1
         for (l in 1:n) {
-          mu             <- sample_params[l, mu_ind]
-          sigma          <- sample_params[l, (sigma_ind + mu_ind)]
+          mu             <- sample[[l]]$mu[[j]][s_ind, k]
+          sigma          <- sample[[l]]$sigma[[j]][s_ind, k]
           densities[l, ] <- dnorm(range, mu, sigma)
         }
         density.lst[[k]] <- densities
@@ -256,10 +273,10 @@ norm_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
                          hmm, state_dep_dist_pooled = FALSE,
                          width = 1, n = 100, level = 0.975, x_step = 0.2) {
 
-  natural        <- norm_ci(hmm, state_dep_dist_pooled, n,
+  sample        <- norm_ci(hmm, state_dep_dist_pooled, n,
                             level, raw_sample = TRUE)
   conf_intervals <- norm_dist_ci_data(x, num_states, num_variables,
-                                      num_subjects, natural,
+                                      num_subjects, sample,
                                       state_dep_dist_pooled, x_step, n, level)
   n      <- nrow(x)
   Var    <- c("Variable 1", "Variable 2", "Variable 3", "Variable 4")
@@ -273,7 +290,7 @@ norm_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
     }
     for (j in 1:num_variables) {
       subvar_data$Observation <- x[, j, i]
-      h <- ggplot() +
+      h <- ggplot2::ggplot() +
         ggplot2::geom_histogram(data = subvar_data,
                                 aes(x = Observation),
                                 binwidth = width,

@@ -19,8 +19,8 @@ timeseries_plot(
 first index (row) corresponds to time, the second (column) to the
 variable number, and the third (matrix number) to the subject number.}
 
-\item{states}{A vector containing the sequence of states that generated the
-data \code{x}.}
+\item{states}{A matrix with the columns containing the sequence of states
+that generated the data in \code{x} for the given subject.}
 
 \item{num_subjects}{The number of subjects that generated the data.}
 
