@@ -1,8 +1,8 @@
 #' Plot timeseries of observations
 #'
 #' @inheritParams norm_fit_hmm
-#' @param states A vector containing the sequence of states that generated the
-#'   data `x`.
+#' @param states A matrix with the columns containing the sequence of states
+#' that generated the data in `x` for the given subject.
 #' @param variable_names A vector containing the names of the variables in the
 #'   data `x`.
 #' @param subject_names A vector containing the names of the subjects generating
