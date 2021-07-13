@@ -188,7 +188,7 @@ norm_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
                               sample_params, state_dep_dist_pooled = FALSE,
                               x_step = 0.2, n = 100, level = 0.975) {
   conf_intervals <- list()
-  ns             <- num_sates
+  ns             <- num_states
   if (state_dep_dist_pooled) {
     ns <- 1
   }
