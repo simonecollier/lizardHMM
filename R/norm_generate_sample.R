@@ -2,9 +2,16 @@
 #'
 #' This function generates data from a normal HMM with specified parameters.
 #'
-#' @inheritParams norm_viterbi
-#' @inheritParams norm_loglikelihood
 #' @param num_sample The size of the desired sample (number of timesteps).
+#' @param hmm A list of parameters that specify the normal HMM, including
+#'   `num_states`, `num_variables`, `num_subjects`, `mu`, `sigma`, `gamma`,
+#'   `delta`.
+#' @param design A list of design matrices for each subject with each row
+#'   indicating the time and each column indicating the value of the
+#'   covariate.
+#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#'   state dependent distribution parameters `mu` and `sigma` should be
+#'   treated as equal for all subjects.
 #'
 #' @return A list of the data and the states that generated the data.
 #' @export

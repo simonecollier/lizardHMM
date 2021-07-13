@@ -4,8 +4,10 @@
 #' from the corresponding vector `design_vec`  and the matrix of regression
 #' coefficients `beta`.
 #'
-#' @inheritParams norm_working_params
+#' @param num_states The number of states in the desired HMM.
+#' @param num_subjects The number of subjects that generated the data.
 #' @param num_time A value indicating the length of the data.
+#' @param beta A matrix of regression coefficients.
 #' @param design A list of design matrices, one for each subject which
 #' indicate the values of the each of the covariates (column) at each point
 #' in time (row).

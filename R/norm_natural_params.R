@@ -4,7 +4,9 @@
 #' original format of the natural parameters and outputs them as a list. This
 #' function is the reverse of `norm_working_params()`.
 #'
-#' @inheritParams norm_working_params
+#' @param num_states The number of states in the desired HMM.
+#' @param num_variables The number of variables in the data.
+#' @param num_subjects The number of subjects that generated the data.
 #' @param num_covariates The number of covariates in the data that the
 #'   transition probability depends on.
 #' @param working_params A vector of the working normal parameters for the

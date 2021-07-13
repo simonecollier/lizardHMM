@@ -3,7 +3,17 @@
 #' This function fits data with an HMM by maximizing the likelihood estimate
 #' given initial normal parameters.
 #'
-#' @inheritParams norm_loglikelihood
+#' @param x The data to be fit with an HMM in the form of a 3D array. The
+#'   first index (row) corresponds to time, the second (column) to the
+#'   variable number, and the third (matrix number) to the subject number.
+#' @param design A list of design matrices for each subject with each row
+#'   indicating the time and each column indicating the value of the
+#'   covariate.
+#' @param num_states The number of states in the desired HMM.
+#' @param num_variables The number of variables in the data.
+#' @param num_subjects The number of subjects that generated the data.
+#' @param num_covariates The number of covariates in the data that the
+#'   transition probability depends on.
 #' @param mu0 The starting values for the means of the normally distributed
 #'   state dependent distributions of the HMM. `mu0` is a list of matrices,
 #'   each matrix corresponding to a different variable in the data being fit.
@@ -18,6 +28,9 @@
 #' @param delta0 A list with each element being the starting initial state
 #'   distribution vector of the HMM for the subject corresponding to that
 #'   index.
+#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#'   state dependent distribution parameters `mu` and `sigma` should be
+#'   treated as equal for all subjects.
 #' @param iterlim A value indicating the number of iterations `nlm()` should run
 #'   before exiting.
 #' @param hessian A logical variable indicating whether to compute the hessian

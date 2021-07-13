@@ -3,13 +3,22 @@
 #' This function computes the negative log-likelihood that the given normal
 #' HMM parameters could have generated the data being fit.
 #'
-#' @inheritParams norm_natural_params
+#' @param working_params A vector of the working normal parameters for the
+#'   HMM.
 #' @param x The data to be fit with an HMM in the form of a 3D array. The
 #'   first index (row) corresponds to time, the second (column) to the
 #'   variable number, and the third (matrix number) to the subject number.
 #' @param design A list of design matrices for each subject with each row
 #'   indicating the time and each column indicating the value of the
 #'   covariate.
+#' @param num_states The number of states in the desired HMM.
+#' @param num_variables The number of variables in the data.
+#' @param num_subjects The number of subjects that generated the data.
+#' @param num_covariates The number of covariates in the data that the
+#'   transition probability depends on.
+#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#'   state dependent distribution parameters `mu` and `sigma` should be
+#'   treated as equal for all subjects.
 #'
 #' @return A number indicating the negative loglikelihood
 #' @export

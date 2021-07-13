@@ -1,6 +1,15 @@
 #' Convert working parameters to a vector of natural parameters
 #'
-#' @inheritParams norm_natural_params
+#' @param num_states The number of states in the desired HMM.
+#' @param num_variables The number of variables in the data.
+#' @param num_subjects The number of subjects that generated the data.
+#' @param num_covariates The number of covariates in the data that the
+#'   transition probability depends on.
+#' @param working_params A vector of the working normal parameters for the
+#'   HMM.
+#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#'   state dependent distribution parameters `mu` and `sigma` should be
+#'   treated as equal for all subjects.
 #'
 #' @return A vector of the natural parameters.
 #' @export
@@ -33,12 +42,19 @@ norm_natural_vec <- function(num_states, num_variables, num_subjects,
 
 #' Reformat confidence interval data
 #'
-#' @inheritParams norm_natural_params
+#' @param num_states The number of states in the desired HMM.
+#' @param num_variables The number of variables in the data.
+#' @param num_subjects The number of subjects that generated the data.
+#' @param num_covariates The number of covariates in the data that the
+#'   transition probability depends on.
 #' @param estimate_vec A vector containing the estimated natural parameters.
 #' @param upper_vec A vector containing the upper confidence interval of the
 #'   estimated natural parameters.
 #' @param lower_vec A vector containing the lower confidence interval of the
 #'   estimated natural parameters.
+#'@param state_dep_dist_pooled A logical variable indiacting whether the
+#'   state dependent distribution parameters `mu` and `sigma` should be
+#'   treated as equal for all subjects.
 #'
 #' @return A list containing the upper and lower confidence interval for each
 #'   estimated parameter.
@@ -108,7 +124,12 @@ norm_ci_data <- function(num_states, num_variables, num_subjects,
 #' using the inverse hessian computed from `norm_fit_hmm()` and the Monte Carlo
 #' method.
 #'
-#' @inheritParams norm_generate_sample
+#' @param hmm A list of parameters that specify the normal HMM, including
+#'   `num_states`, `num_variables`, `num_subjects`, `mu`, `sigma`, `gamma`,
+#'   `delta`.
+#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#'   state dependent distribution parameters `mu` and `sigma` should be
+#'   treated as equal for all subjects.
 #' @param n The number of samples in the Monte Carlo fitting.
 #' @param level A number indicating the level of confidence for the desired
 #'   interval.
@@ -195,11 +216,23 @@ norm_ci <- function(hmm, state_dep_dist_pooled = FALSE, n = 100, level= 0.975,
 #' This function computes the confidence intervals for the fitted normal state
 #' dependent distributions using the Monte Carlo approach.
 #'
-#' @inheritParams norm_loglikelihood
-#' @inheritParams norm_ci
-#' @param sample_params A matrix of the natural parameters.
+#' @param x The data to be fit with an HMM in the form of a 3D array. The
+#'   first index (row) corresponds to time, the second (column) to the
+#'   variable number, and the third (matrix number) to the subject number.
+#' @param num_states The number of states in the desired HMM.
+#' @param num_variables The number of variables in the data.
+#' @param num_subjects The number of subjects that generated the data.
+#' @param num_covariates The number of covariates in the data that the
+#'   transition probability depends on.
+#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#'   state dependent distribution parameters `mu` and `sigma` should be
+#'   treated as equal for all subjects.
+#' @param sample A list of `mu` and `sigma` sampled according to `norm_ci()`.
 #' @param x_step A value indicating the step length for the range of
 #'   observation values.
+#' @param n The number of samples in the Monte Carlo fitting.
+#' @param level A number indicating the level of confidence for the desired
+#'   interval.
 #'
 #' @return
 #' @export
@@ -249,18 +282,27 @@ norm_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
 
 #' Title
 #'
-#' @param x
+#' Description
+#'
+#' @param x The data to be fit with an HMM in the form of a 3D array. The
+#'   first index (row) corresponds to time, the second (column) to the
+#'   variable number, and the third (matrix number) to the subject number.
 #' @param viterbi
-#' @param conf_intervals
-#' @param num_states
-#' @param num_subjects
-#' @param num_variables
-#' @param hmm
-#' @param state_dep_dist_pooled
-#' @param width
-#' @param n
-#' @param level
-#' @param x_step
+#' @param num_states The number of states in the desired HMM.
+#' @param num_subjects The number of subjects that generated the data.
+#' @param num_variables The number of variables in the data.
+#' @param hmm A list of parameters that specify the normal HMM, including
+#'   `num_states`, `num_variables`, `num_subjects`, `mu`, `sigma`, `gamma`,
+#'   `delta`.
+#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#'   state dependent distribution parameters `mu` and `sigma` should be
+#'   treated as equal for all subjects.
+#' @param width The width of the histogram bins.
+#' @param n The number of samples in the Monte Carlo fitting.
+#' @param level A number indicating the level of confidence for the desired
+#'   interval.
+#' @param x_step A value indicating the step length for the range of
+#'   observation values.
 #'
 #' @return
 #' @export

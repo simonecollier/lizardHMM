@@ -4,10 +4,15 @@
 #' outputs the most likely sequence of states that could have generated the
 #' data using global decoding by the Viterbi algorithm.
 #'
-#' @inheritParams norm_loglikelihood
+#' @param x The data to be fit with an HMM in the form of a 3D array. The
+#'   first index (row) corresponds to time, the second (column) to the
+#'   variable number, and the third (matrix number) to the subject number.
 #' @param hmm A list of parameters that specify the normal HMM, including
 #'   `num_states`, `num_variables`, `num_subjects`, `mu`, `sigma`, `gamma`,
 #'   `delta`.
+#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#'   state dependent distribution parameters `mu` and `sigma` should be
+#'   treated as equal for all subjects.
 #'
 #' @return A matrix with each column containing the sequence of states for the
 #'   given subject.

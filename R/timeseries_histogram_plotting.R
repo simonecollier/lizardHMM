@@ -1,6 +1,8 @@
 #' Plot timeseries of observations
 #'
-#' @inheritParams norm_fit_hmm
+#' @param x The data to be fit with an HMM in the form of a 3D array. The
+#'   first index (row) corresponds to time, the second (column) to the
+#'   variable number, and the third (matrix number) to the subject number.
 #' @param states A matrix with the columns containing the sequence of states
 #' that generated the data in `x` for the given subject.
 #' @param variable_names A vector containing the names of the variables in the
