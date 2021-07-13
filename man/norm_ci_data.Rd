@@ -16,6 +16,15 @@ norm_ci_data(
 )
 }
 \arguments{
+\item{num_states}{The number of states in the desired HMM.}
+
+\item{num_variables}{The number of variables in the data.}
+
+\item{num_subjects}{The number of subjects that generated the data.}
+
+\item{num_covariates}{The number of covariates in the data that the
+transition probability depends on.}
+
 \item{estimate_vec}{A vector containing the estimated natural parameters.}
 
 \item{upper_vec}{A vector containing the upper confidence interval of the
@@ -23,6 +32,10 @@ estimated natural parameters.}
 
 \item{lower_vec}{A vector containing the lower confidence interval of the
 estimated natural parameters.}
+
+\item{state_dep_dist_pooled}{A logical variable indiacting whether the
+state dependent distribution parameters \code{mu} and \code{sigma} should be
+treated as equal for all subjects.}
 }
 \value{
 A list containing the upper and lower confidence interval for each
