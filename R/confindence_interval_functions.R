@@ -188,7 +188,7 @@ norm_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
                               sample_params, state_dep_dist_pooled = FALSE,
                               x_step = 0.2, n = 100, level = 0.975) {
   conf_intervals <- list()
-  ns             <- num_states
+  ns             <- num_subjects
   if (state_dep_dist_pooled) {
     ns <- 1
   }
@@ -252,8 +252,7 @@ norm_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
 #'   ggtitle theme labs
 #'
 #' @examples
-norm_hist_ci <- function(x, viterbi
-                         num_states, num_subjects, num_variables,
+norm_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
                          hmm, state_dep_dist_pooled = FALSE,
                          width = 1, n = 100, level = 0.975, x_step = 0.2) {
 
@@ -275,17 +274,17 @@ norm_hist_ci <- function(x, viterbi
     for (j in 1:num_variables) {
       subvar_data$Observation <- x[, j, i]
       h <- ggplot() +
-        geom_histogram(data = subvar_data,
-                       aes(x = Observation),
-                       binwidth = width,
-                       colour = "cornsilk4",
-                       fill = "white") +
-        theme_bw() +
-        ggtitle(Sub[i]) +
-        theme(panel.grid.major = element_blank(),
-              panel.grid.minor = element_blank(),
-              plot.title = element_text(hjust = 0.5)) +
-        labs(x = Var[j], y = '')
+        ggplot2::geom_histogram(data = subvar_data,
+                                aes(x = Observation),
+                                binwidth = width,
+                                colour = "cornsilk4",
+                                fill = "white") +
+        ggplot2::theme_bw() +
+        ggplot2::ggtitle(Sub[i]) +
+        ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                       panel.grid.minor = ggplot2::element_blank(),
+                       plot.title = ggplot2::element_text(hjust = 0.5)) +
+        ggplot2::labs(x = Var[j], y = '')
 
       xfit <- seq(min(subvar_data$Observation), max(subvar_data$Observation),
                   by = x_step)
@@ -295,8 +294,9 @@ norm_hist_ci <- function(x, viterbi
         yfit     <- yfit * sum(subvar_data$State == k) * width
         df       <- data.frame('xfit' = xfit, 'yfit' = yfit,
                                col = as.factor(rep(k, length(xfit))))
-        h        <- h + geom_line(data = df, aes(xfit, yfit, colour = col),
-                                  lwd = 0.7)
+        h        <- h + ggplot2::geom_line(data = df,
+                                           aes(xfit, yfit, colour = col),
+                                           lwd = 0.7)
         marginal <- marginal + yfit
       }
       h  <- h + labs(color = "State")
@@ -310,8 +310,9 @@ norm_hist_ci <- function(x, viterbi
           sum(subvar_data$State == k)*width
         df <- data.frame('x' = conf_intervals[[i]][[j]]$range,
                          'upper' = upper, 'lower' = lower)
-        h <- h + geom_ribbon(data = df, aes(x = x, ymin = lower, ymax = upper),
-                             fill = (k + 1), alpha = 0.4)
+        h <- h + ggplot2::geom_ribbon(data = df,
+                                      aes(x = x, ymin = lower, ymax = upper),
+                                      fill = (k + 1), alpha = 0.4)
       }
       plots <- c(plots, list(h))
     }
