@@ -104,17 +104,29 @@ hmm_fit
 We can find the confidence intervals for our parameter estimates.
 
 ```{r, echo = TRUE}
-conf_intervals <- norm_ci(hmm_fit, state_dep_dist_pooled = FALSE, n = 100, level= 0.975) 
+conf_intervals <- norm_ci(hmm_fit, state_dep_dist_pooled = FALSE, 
+                          n = 100, level= 0.975) 
 conf_intervals
 ```
 
 Using the viterbi algorithm we can decode the hidden states according to our 
-fitted HMM.
+fitted HMM and plot the resulting time series.
 
 ```{r, echo = TRUE}
 viterbi <- norm_viterbi(x, hmm_fit)
-viterbi
+timeseries_plot(x, viterbi, num_subjects, num_variables)
 ```
+
+We can compute the confidence intervals of the state dependent normal 
+distributions and compare them to the histogram of data.
+
+```{r, echo = TRUE}
+norm_hist_ci(x, viterbi, num_states, num_subjects, num_variables, hmm_fit, 
+             state_dep_dist_pooled = FALSE,
+             width = 1, n = 100, level = 0.975, x_step = 0.2)
+```
+
+
 
 
 
