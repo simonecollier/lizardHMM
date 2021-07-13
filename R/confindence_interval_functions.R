@@ -260,7 +260,7 @@ norm_hist_ci <- function(x, viterbi, conf_intervals,
   natural        <- norm_ci(hmm, state_dep_dist_pooled, n,
                             level, raw_sample = TRUE)
   conf_intervals <- norm_dist_ci_data(x, num_states, num_variables,
-                                      num_subjects, sample_params,
+                                      num_subjects, natural,
                                       state_dep_dist_pooled, x_step, n, level)
   n      <- nrow(x)
   Var    <- c("Variable 1", "Variable 2", "Variable 3", "Variable 4")
