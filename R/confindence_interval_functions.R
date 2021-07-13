@@ -33,7 +33,7 @@ norm_natural_vec <- function(num_states, num_variables, num_subjects,
 
 #' Reformat confidence interval data
 #'
-#' @inheritParams natural_params
+#' @inheritParams norm_natural_params
 #' @param estimate_vec A vector containing the estimated natural parameters.
 #' @param upper_vec A vector containing the upper confidence interval of the
 #'   estimated natural parameters.

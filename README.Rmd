@@ -70,10 +70,22 @@ design[[1]][, 3] <- rnorm(1000, mean = 5, sd = 1)
 
 sample <- norm_generate_sample(num_sample, hmm1, design)
 x      <- sample$observ
+```
 
+We can plot the timeseries of the observations for each subect and variable 
+along with the corresponding states.
+
+```{r, echo = TRUE}
 timeseries_plot(x, sample$state, hmm1$num_subjects, hmm1$num_variables)
 ```
 
+The histogram of the data for each subject and variable can be gnerated, 
+overlayed with the state dependent normal distributions.
+
+```{r, echo = TRUE}
+norm_hist(sample, hmm1$num_states,  hmm1$num_subjects, hmm1$num_variables, 
+          hmm1, width = 1, x_step = 0.2)
+```
 
 Now we can try fitting the data we generated with a basic HMM with reasonable 
 guesses for the initial parameters.
@@ -98,7 +110,6 @@ delta0 <- list(c(1/3, 1/3, 1/3))
 hmm_fit <- norm_fit_hmm(x, design, num_states, num_variables, num_subjects,
                         num_covariates, mu0, sigma0, beta0, delta0,
                         iterlim = 200, hessian = TRUE)
-hmm_fit
 ```
 
 We can find the confidence intervals for our parameter estimates.
