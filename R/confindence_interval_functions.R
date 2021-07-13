@@ -194,9 +194,9 @@ norm_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
   }
   mu_ind         <- 1
   sigma_ind      <- ns*num_variables*num_states
-  for (i in 1:ns) {
-    conf_intervals[[i]] <- list()
-    for (j in 1:num_variables) {
+  for (j in 1:num_variables) {
+    for (i in 1:ns) {
+      conf_intervals[[i]] <- list()
       range       <- seq(min(x[, j, i]), max(x[, j, i]), length.out = 100)
       xc          <- length(range)
       density.lst <- list()
@@ -252,7 +252,7 @@ norm_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
 #'   ggtitle theme labs
 #'
 #' @examples
-norm_hist_ci <- function(x, viterbi, conf_intervals,
+norm_hist_ci <- function(x, viterbi
                          num_states, num_subjects, num_variables,
                          hmm, state_dep_dist_pooled = FALSE,
                          width = 1, n = 100, level = 0.975, x_step = 0.2) {
