@@ -21,25 +21,12 @@ norm_natural_vec <- function(num_states, num_variables, num_subjects,
   sigma_start <- mu_end + 1
   beta_start  <- sigma_end + 1
   beta_end    <- sigma_end + (num_states^2 - num_states)*(num_covariates + 1)
-  delta_start <- beta_end + 1
-  delta_end   <- length(working_params)
 
   natural                        <- numeric()
   natural[mu_start:mu_end]       <- working_params[mu_start:mu_end]
   natural[sigma_start:sigma_end] <- exp(working_params[sigma_start:sigma_end])
   natural[beta_start:beta_end]   <- working_params[beta_start:beta_end]
 
-  if (num_states == 1) {
-    natural <- c(natural, rep(1, num_subjects))
-  } else {
-    delta <- list()
-    d <- split_vec(working_params, delta_start, delta_end, num_states - 1)
-    for (i in 1:num_subjects) {
-      foo        <- c(1, exp(d[[i]]))
-      delta[[i]] <- foo/sum(foo)
-    }
-    natural <- c(natural, unlist(delta))
-  }
   natural
 }
 
