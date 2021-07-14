@@ -25,13 +25,16 @@ norm_ci_data(
 \item{num_covariates}{The number of covariates in the data that the
 transition probability depends on.}
 
-\item{estimate_vec}{A vector containing the estimated natural parameters.}
+\item{estimate_vec}{A vector containing the estimated natural parameters
+of the normal HMM in the format outputte by \code{norm_natural_vec()}.}
 
 \item{upper_vec}{A vector containing the upper confidence interval of the
-estimated natural parameters.}
+estimated natural parameters of the normal HMM in the format outputte by
+\code{norm_natural_vec()}.}
 
 \item{lower_vec}{A vector containing the lower confidence interval of the
-estimated natural parameters.}
+estimated natural parameters of the normal HMM in the format outputte by
+\code{norm_natural_vec()}.}
 
 \item{state_dep_dist_pooled}{A logical variable indiacting whether the
 state dependent distribution parameters \code{mu} and \code{sigma} should be
@@ -42,5 +45,6 @@ A list containing the upper and lower confidence interval for each
 estimated parameter.
 }
 \description{
-Reformat confidence interval data
+This is a helper function for \code{norm_ci()} which reformats the output so that
+it is more easily interpreted.
 }

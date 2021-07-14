@@ -51,7 +51,7 @@ in the data being fit. The columns of the matrices correspond to the
 state number and the rows correspond to the subject number.}
 
 \item{beta0}{A matrix of the initial regression coefficients for the effect
-of the covariates on the transition probability matrix \code{gamma}.}
+of the covariates on the transition probability matrices \code{gamma}.}
 
 \item{delta0}{A list with each element being the starting initial state
 distribution vector of the HMM for the subject corresponding to that
@@ -68,9 +68,7 @@ before exiting.}
 at the minimum.}
 }
 \value{
-A list of parameters that specify the fitted normal HMM, including
-\code{num_states}, \code{num_variables}, \code{num_subjects}, \code{mu}, \code{sigma}, \code{gamma},
-\code{delta}.
+A list of parameters that specify the fitted normal HMM.
 }
 \description{
 This function fits data with an HMM by maximizing the likelihood estimate

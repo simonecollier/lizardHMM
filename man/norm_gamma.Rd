@@ -2,7 +2,7 @@
 % Please edit documentation in R/norm_gamma.R
 \name{norm_gamma}
 \alias{norm_gamma}
-\title{Compute transition probability matrix}
+\title{Compute transition probability matrices}
 \usage{
 norm_gamma(num_states, num_subjects, num_time, beta, design)
 }
@@ -26,6 +26,6 @@ probability matrices at each time step.
 }
 \description{
 This function computes the time dependent transition probability matrix
-from the corresponding vector \code{design_vec}  and the matrix of regression
+from the corresponding vector \code{design_vec} and the matrix of regression
 coefficients \code{beta}.
 }

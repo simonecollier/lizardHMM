@@ -10,7 +10,7 @@ norm_generate_sample(num_sample, hmm, design, state_dep_dist_pooled = FALSE)
 \item{num_sample}{The size of the desired sample (number of timesteps).}
 
 \item{hmm}{A list of parameters that specify the normal HMM, including
-\code{num_states}, \code{num_variables}, \code{num_subjects}, \code{mu}, \code{sigma}, \code{gamma},
+\code{num_states}, \code{num_variables}, \code{num_subjects}, \code{mu}, \code{sigma}, \code{beta},
 \code{delta}.}
 
 \item{design}{A list of design matrices for each subject with each row

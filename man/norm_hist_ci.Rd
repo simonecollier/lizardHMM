@@ -2,7 +2,7 @@
 % Please edit documentation in R/confidence_interval_functions.R
 \name{norm_hist_ci}
 \alias{norm_hist_ci}
-\title{Title}
+\title{Plot histograms with confidence intervals}
 \usage{
 norm_hist_ci(
   x,
@@ -22,6 +22,10 @@ norm_hist_ci(
 \item{x}{The data to be fit with an HMM in the form of a 3D array. The
 first index (row) corresponds to time, the second (column) to the
 variable number, and the third (matrix number) to the subject number.}
+
+\item{viterbi}{A matrix with each column indicating the sequence of states
+decoded by \code{norm_viterbi()} that is supposed to have generated the data of
+the subject in the corresponding column.}
 
 \item{num_states}{The number of states in the desired HMM.}
 
@@ -48,8 +52,11 @@ interval.}
 observation values.}
 }
 \value{
-
+Histograms of the data with overlayed distributions and confidence
+intervals.
 }
 \description{
-Description
+This function plots the histograms for each subject and variable with the
+fitted state dependent distributions overlayed and their corresponding
+confidence intervals.
 }

@@ -17,7 +17,6 @@
 #' @return A matrix with each column containing the sequence of states for the
 #'   given subject.
 #' @export
-
 norm_viterbi <- function(x, hmm, state_dep_dist_pooled = FALSE) {
   n             <- nrow(x)
   num_states    <- hmm$num_states

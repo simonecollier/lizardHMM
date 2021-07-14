@@ -13,16 +13,15 @@
 #'   covariate.
 #' @param num_states The number of states in the desired HMM.
 #' @param num_variables The number of variables in the data.
-#' @param num_subjects The number of subjects that generated the data.
+#' @param num_subjects The number of subjects/trials that generated the data.
 #' @param num_covariates The number of covariates in the data that the
-#'   transition probability depends on.
+#'   transition probability matrix depends on.
 #' @param state_dep_dist_pooled A logical variable indiacting whether the
 #'   state dependent distribution parameters `mu` and `sigma` should be
 #'   treated as equal for all subjects.
 #'
 #' @return A number indicating the negative loglikelihood
 #' @export
-
 norm_loglikelihood <- function(working_params, x, design,
                                num_states, num_variables, num_subjects,
                                num_covariates,

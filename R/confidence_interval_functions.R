@@ -1,5 +1,8 @@
 #' Convert working parameters to a vector of natural parameters
 #'
+#' This funciton converts the vecgtor of working parameters to a vector of
+#' natural parameters not inculding delta.
+#'
 #' @param num_states The number of states in the desired HMM.
 #' @param num_variables The number of variables in the data.
 #' @param num_subjects The number of subjects/trials that generated the data.
@@ -13,8 +16,6 @@
 #'
 #' @return A vector of the natural parameters.
 #' @export
-#'
-#' @examples
 norm_natural_vec <- function(num_states, num_variables, num_subjects,
                              num_covariates, working_params,
                              state_dep_dist_pooled = FALSE) {
@@ -42,16 +43,22 @@ norm_natural_vec <- function(num_states, num_variables, num_subjects,
 
 #' Reformat confidence interval data
 #'
+#' This is a helper function for `norm_ci()` which reformats the output so that
+#' it is more easily interpreted.
+#'
 #' @param num_states The number of states in the desired HMM.
 #' @param num_variables The number of variables in the data.
 #' @param num_subjects The number of subjects/trials that generated the data.
 #' @param num_covariates The number of covariates in the data that the
 #'   transition probability depends on.
-#' @param estimate_vec A vector containing the estimated natural parameters.
+#' @param estimate_vec A vector containing the estimated natural parameters
+#'   of the normal HMM in the format outputte by `norm_natural_vec()`.
 #' @param upper_vec A vector containing the upper confidence interval of the
-#'   estimated natural parameters.
+#'   estimated natural parameters of the normal HMM in the format outputte by
+#'   `norm_natural_vec()`.
 #' @param lower_vec A vector containing the lower confidence interval of the
-#'   estimated natural parameters.
+#'   estimated natural parameters of the normal HMM in the format outputte by
+#'   `norm_natural_vec()`.
 #'@param state_dep_dist_pooled A logical variable indiacting whether the
 #'   state dependent distribution parameters `mu` and `sigma` should be
 #'   treated as equal for all subjects.
@@ -59,8 +66,6 @@ norm_natural_vec <- function(num_states, num_variables, num_subjects,
 #' @return A list containing the upper and lower confidence interval for each
 #'   estimated parameter.
 #' @export
-#'
-#' @examples
 norm_ci_data <- function(num_states, num_variables, num_subjects,
                          num_covariates, estimate_vec, upper_vec, lower_vec,
                          state_dep_dist_pooled = FALSE) {
@@ -120,28 +125,26 @@ norm_ci_data <- function(num_states, num_variables, num_subjects,
 
 #' Compute the confidence intervals
 #'
-#' This function computes the standard errors of the fitted HMM parameters
-#' using the inverse hessian computed from `norm_fit_hmm()` and the Monte Carlo
-#' method.
+#' This function computes the confidence intervals for the estimated parameters
+#' `mu`, `sigma`, and `beta` using the variances outputted from `norm_fit_hmm()`
+#' and the Monte Carlo method of estimation.
 #'
 #' @param hmm A list of parameters that specify the normal HMM, including
-#'   `num_states`, `num_variables`, `num_subjects`, `mu`, `sigma`, `gamma`,
-#'   `delta`.
+#'   `num_states`, `num_variables`, `num_subjects`,`num_covariates`, `mu`,
+#'   `sigma`, `beta`, `delta`.
 #' @param state_dep_dist_pooled A logical variable indiacting whether the
 #'   state dependent distribution parameters `mu` and `sigma` should be
 #'   treated as equal for all subjects.
 #' @param n The number of samples in the Monte Carlo fitting.
 #' @param level A number indicating the level of confidence for the desired
 #'   interval.
-#' @param raw_sample A logical vaiable indicating whether to output just
-#'   the raw samples without the computed confidence intervals.
+#' @param raw_sample A logical variable indicating wheter to simply output the
+#'   `n` sampled `mu`s and `sigma`s from the Monte Carlo estimate.
 #'
-#' @return Either a matrix of the samples natural parameters or the list of
-#'   confidence interals for each parameter.
+#' @return Either a list of the sampled `mu`s and `sigma`s or the list of
+#'   confidence intervals for each parameter.
 #' @export
 #' @importFrom stats rnorm quantile
-#'
-#' @examples
 norm_ci <- function(hmm, state_dep_dist_pooled = FALSE, n = 100, level= 0.975,
                     raw_sample = FALSE) {
 
@@ -211,10 +214,11 @@ norm_ci <- function(hmm, state_dep_dist_pooled = FALSE, n = 100, level= 0.975,
 }
 
 
-#' #' Compute the confidence intervals of fitted normal distributions
+#' Compute the confidence intervals of fitted normal distributions
 #'
-#' This function computes the confidence intervals for the fitted normal state
-#' dependent distributions using the Monte Carlo approach.
+#' This is a helper function for `norm_hist_ci()` which computes the confidence
+#' intervals for the fitted normal state dependent distributions by utilizing
+#' `norm_ci()`.
 #'
 #' @param x The data to be fit with an HMM in the form of a 3D array. The
 #'   first index (row) corresponds to time, the second (column) to the
@@ -222,8 +226,6 @@ norm_ci <- function(hmm, state_dep_dist_pooled = FALSE, n = 100, level= 0.975,
 #' @param num_states The number of states in the desired HMM.
 #' @param num_variables The number of variables in the data.
 #' @param num_subjects The number of subjects/trials that generated the data.
-#' @param num_covariates The number of covariates in the data that the
-#'   transition probability depends on.
 #' @param state_dep_dist_pooled A logical variable indiacting whether the
 #'   state dependent distribution parameters `mu` and `sigma` should be
 #'   treated as equal for all subjects.
@@ -234,7 +236,8 @@ norm_ci <- function(hmm, state_dep_dist_pooled = FALSE, n = 100, level= 0.975,
 #' @param level A number indicating the level of confidence for the desired
 #'   interval.
 #'
-#' @return
+#' @return A list containing the upper and lower confidence intervals and the
+#'   parameter esimates.
 #' @export
 #' @importFrom stats dnorm quantile
 norm_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
@@ -280,14 +283,18 @@ norm_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
 }
 
 
-#' Title
+#' Plot histograms with confidence intervals
 #'
-#' Description
+#' This function plots the histograms for each subject and variable with the
+#' fitted state dependent distributions overlayed and their corresponding
+#' confidence intervals.
 #'
 #' @param x The data to be fit with an HMM in the form of a 3D array. The
 #'   first index (row) corresponds to time, the second (column) to the
 #'   variable number, and the third (matrix number) to the subject number.
-#' @param viterbi
+#' @param viterbi A matrix with each column indicating the sequence of states
+#'   decoded by `norm_viterbi()` that is supposed to have generated the data of
+#'   the subject in the corresponding column.
 #' @param num_states The number of states in the desired HMM.
 #' @param num_subjects The number of subjects/trials that generated the data.
 #' @param num_variables The number of variables in the data.
@@ -304,13 +311,12 @@ norm_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
 #' @param x_step A value indicating the step length for the range of
 #'   observation values.
 #'
-#' @return
+#' @return Histograms of the data with overlayed distributions and confidence
+#'   intervals.
 #' @export
 #' @importFrom stats dnorm
 #' @importFrom ggplot2 ggplot geom_histogram aes theme_bw geom_ribbon geom_line
 #'   ggtitle theme labs
-#'
-#' @examples
 norm_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
                          hmm, state_dep_dist_pooled = FALSE,
                          width = 1, n = 100, level = 0.975, x_step = 0.2) {

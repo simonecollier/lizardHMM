@@ -14,8 +14,8 @@ norm_ci(
 }
 \arguments{
 \item{hmm}{A list of parameters that specify the normal HMM, including
-\code{num_states}, \code{num_variables}, \code{num_subjects}, \code{mu}, \code{sigma}, \code{gamma},
-\code{delta}.}
+\code{num_states}, \code{num_variables}, \code{num_subjects},\code{num_covariates}, \code{mu},
+\code{sigma}, \code{beta}, \code{delta}.}
 
 \item{state_dep_dist_pooled}{A logical variable indiacting whether the
 state dependent distribution parameters \code{mu} and \code{sigma} should be
@@ -26,15 +26,15 @@ treated as equal for all subjects.}
 \item{level}{A number indicating the level of confidence for the desired
 interval.}
 
-\item{raw_sample}{A logical vaiable indicating whether to output just
-the raw samples without the computed confidence intervals.}
+\item{raw_sample}{A logical variable indicating wheter to simply output the
+\code{n} sampled \code{mu}s and \code{sigma}s from the Monte Carlo estimate.}
 }
 \value{
-Either a matrix of the samples natural parameters or the list of
-confidence interals for each parameter.
+Either a list of the sampled \code{mu}s and \code{sigma}s or the list of
+confidence intervals for each parameter.
 }
 \description{
-This function computes the standard errors of the fitted HMM parameters
-using the inverse hessian computed from \code{norm_fit_hmm()} and the Monte Carlo
-method.
+This function computes the confidence intervals for the estimated parameters
+\code{mu}, \code{sigma}, and \code{beta} using the variances outputted from \code{norm_fit_hmm()}
+and the Monte Carlo method of estimation.
 }

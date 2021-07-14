@@ -22,6 +22,10 @@ variable number, and the third (matrix number) to the subject number.}
 \item{states}{A matrix with the columns containing the sequence of states
 that generated the data in \code{x} for the given subject.}
 
+\item{num_subjects}{The number of subjects/trials that generated the data.}
+
+\item{num_variables}{The number of variables in the data.}
+
 \item{variable_names}{A vector containing the names of the variables in the
 data \code{x}.}
 

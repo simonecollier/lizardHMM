@@ -11,9 +11,9 @@
 #'   covariate.
 #' @param num_states The number of states in the desired HMM.
 #' @param num_variables The number of variables in the data.
-#' @param num_subjects The number of subjects that generated the data.
+#' @param num_subjects The number of subjects/trials that generated the data.
 #' @param num_covariates The number of covariates in the data that the
-#'   transition probability depends on.
+#'   transition probability matrix depends on.
 #' @param mu0 The starting values for the means of the normally distributed
 #'   state dependent distributions of the HMM. `mu0` is a list of matrices,
 #'   each matrix corresponding to a different variable in the data being fit.
@@ -24,7 +24,8 @@
 #'   is a list of matrices, each matrix corresponding to a different variable
 #'   in the data being fit. The columns of the matrices correspond to the
 #'   state number and the rows correspond to the subject number.
-#' @param beta0 A matrix of regression coefficients.
+#' @param beta0 A matrix of the initial regression coefficients for the effect
+#'    of the covariates on the transition probability matrices `gamma`.
 #' @param delta0 A list with each element being the starting initial state
 #'   distribution vector of the HMM for the subject corresponding to that
 #'   index.
@@ -36,11 +37,8 @@
 #' @param hessian A logical variable indicating whether to compute the hessian
 #'   at the minimum.
 #'
-#' @return A list of parameters that specify the fitted normal HMM, including
-#'   `num_states`, `num_variables`, `num_subjects`, `mu`, `sigma`, `gamma`,
-#'   `delta`.
+#' @return A list of parameters that specify the fitted normal HMM.
 #' @export
-
 norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                          num_covariates,
                          mu0, sigma0, beta0, delta0,

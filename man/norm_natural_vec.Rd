@@ -34,5 +34,6 @@ treated as equal for all subjects.}
 A vector of the natural parameters.
 }
 \description{
-Convert working parameters to a vector of natural parameters
+This funciton converts the vecgtor of working parameters to a vector of
+natural parameters not inculding delta.
 }

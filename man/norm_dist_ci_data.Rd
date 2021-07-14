@@ -2,7 +2,7 @@
 % Please edit documentation in R/confidence_interval_functions.R
 \name{norm_dist_ci_data}
 \alias{norm_dist_ci_data}
-\title{#' Compute the confidence intervals of fitted normal distributions}
+\title{Compute the confidence intervals of fitted normal distributions}
 \usage{
 norm_dist_ci_data(
   x,
@@ -40,14 +40,13 @@ observation values.}
 
 \item{level}{A number indicating the level of confidence for the desired
 interval.}
-
-\item{num_covariates}{The number of covariates in the data that the
-transition probability depends on.}
 }
 \value{
-
+A list containing the upper and lower confidence intervals and the
+parameter esimates.
 }
 \description{
-This function computes the confidence intervals for the fitted normal state
-dependent distributions using the Monte Carlo approach.
+This is a helper function for \code{norm_hist_ci()} which computes the confidence
+intervals for the fitted normal state dependent distributions by utilizing
+\code{norm_ci()}.
 }
