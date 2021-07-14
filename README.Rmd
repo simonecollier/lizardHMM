@@ -42,7 +42,7 @@ covariates (included in the computation of the transition probability matrix).
 We also define the design matrix which indicates the values of the covariates
 at each point in time. Then we go about generating data from this HMM.
 
-```{r HMM Setup}
+```{r hmm_setup}
 library(lizardHMM)
 
 hmm1 <- list(num_states = 3,
@@ -58,7 +58,7 @@ hmm1 <- list(num_states = 3,
                               0.01, 0.04, 0.002,
                               0.01, 0.01, 0.004,
                               0.01, 0.03, 0.001), ncol = 3, nrow = 6, byrow = TRUE),
-             delta = list(c(0.3, 0.02, 0.5)))
+             delta = list(c(0.3, 0.2, 0.5)))
 
 num_sample <- 1000
 
@@ -75,22 +75,22 @@ x      <- sample$observ
 We can plot the timeseries of the observations for each subect and variable 
 along with the corresponding states.
 
-```{r, echo = TRUE}
+```{r timeseries_plot, echo = TRUE}
 timeseries_plot(x, sample$state, hmm1$num_subjects, hmm1$num_variables)
 ```
 
 The histogram of the data for each subject and variable can be gnerated, 
 overlayed with the state dependent normal distributions.
 
-```{r, echo = TRUE}
-norm_hist(sample, hmm1$num_states,  hmm1$num_subjects, hmm1$num_variables, 
+```{r norm_hist, echo = TRUE}
+norm_hist(sample, hmm1$num_states, hmm1$num_variables, hmm1$num_subjects,
           hmm1, width = 1, x_step = 0.2)
 ```
 
 Now we can try fitting the data we generated with a basic HMM with reasonable 
 guesses for the initial parameters.
 
-```{r, echo = TRUE, warning = FALSE, message = FALSE}
+```{r hmm_fit, echo = TRUE, warning = FALSE, message = FALSE}
 num_states = 3
 num_variables = 2
 num_subjects = 1
@@ -114,7 +114,7 @@ hmm_fit <- norm_fit_hmm(x, design, num_states, num_variables, num_subjects,
 
 We can find the confidence intervals for our parameter estimates.
 
-```{r, echo = TRUE}
+```{r confidence_intervals, echo = TRUE}
 conf_intervals <- norm_ci(hmm_fit, state_dep_dist_pooled = FALSE, 
                           n = 100, level= 0.975) 
 conf_intervals
@@ -123,7 +123,7 @@ conf_intervals
 Using the viterbi algorithm we can decode the hidden states according to our 
 fitted HMM and plot the resulting time series.
 
-```{r, echo = TRUE}
+```{r viterbi, echo = TRUE}
 viterbi <- norm_viterbi(x, hmm_fit)
 timeseries_plot(x, viterbi, num_subjects, num_variables)
 ```
@@ -131,7 +131,7 @@ timeseries_plot(x, viterbi, num_subjects, num_variables)
 We can compute the confidence intervals of the state dependent normal 
 distributions and compare them to the histogram of data.
 
-```{r, echo = TRUE}
+```{r hist_ci, echo = TRUE}
 norm_hist_ci(x, viterbi, num_states, num_subjects, num_variables, hmm_fit, 
              state_dep_dist_pooled = FALSE,
              width = 1, n = 100, level = 0.975, x_step = 0.2)

@@ -51,7 +51,7 @@ hmm1 <- list(num_states = 3,
                               0.01, 0.04, 0.002,
                               0.01, 0.01, 0.004,
                               0.01, 0.03, 0.001), ncol = 3, nrow = 6, byrow = TRUE),
-             delta = list(c(0.3, 0.02, 0.5)))
+             delta = list(c(0.3, 0.2, 0.5)))
 
 num_sample <- 1000
 
@@ -73,29 +73,29 @@ timeseries_plot(x, sample$state, hmm1$num_subjects, hmm1$num_variables)
 #> [[1]]
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+<img src="man/figures/README-timeseries_plot-1.png" width="100%" />
 
     #> 
     #> [[2]]
 
-<img src="man/figures/README-unnamed-chunk-2-2.png" width="100%" />
+<img src="man/figures/README-timeseries_plot-2.png" width="100%" />
 
 The histogram of the data for each subject and variable can be gnerated,
 overlayed with the state dependent normal
 distributions.
 
 ``` r
-norm_hist(sample, hmm1$num_states,  hmm1$num_subjects, hmm1$num_variables, 
+norm_hist(sample, hmm1$num_states, hmm1$num_variables, hmm1$num_subjects,
           hmm1, width = 1, x_step = 0.2)
 #> [[1]]
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+<img src="man/figures/README-norm_hist-1.png" width="100%" />
 
     #> 
     #> [[2]]
 
-<img src="man/figures/README-unnamed-chunk-3-2.png" width="100%" />
+<img src="man/figures/README-norm_hist-2.png" width="100%" />
 
 Now we can try fitting the data we generated with a basic HMM with
 reasonable guesses for the initial parameters.
@@ -131,94 +131,94 @@ conf_intervals
 #> $mu
 #> $mu$estimate
 #> $mu$estimate$`1`
-#>         [,1]     [,2]     [,3]
-#> [1,] 11.8435 17.92814 21.87435
+#>          [,1]     [,2]     [,3]
+#> [1,] 11.58588 18.01754 22.09549
 #> 
 #> $mu$estimate$`2`
 #>           [,1]      [,2]       [,3]
-#> [1,] -12.03413 -7.057236 -0.1166303
+#> [1,] -12.01727 -7.121748 0.06469706
 #> 
 #> 
 #> $mu$upper
 #> $mu$upper$`1`
 #>          [,1]     [,2]     [,3]
-#> [1,] 12.21659 18.04655 22.05237
+#> [1,] 11.82979 18.09373 22.28533
 #> 
 #> $mu$upper$`2`
-#>           [,1]      [,2]       [,3]
-#> [1,] -11.93159 -6.629203 0.04621965
+#>           [,1]      [,2]      [,3]
+#> [1,] -11.94133 -6.768608 0.2781436
 #> 
 #> 
 #> $mu$lower
 #> $mu$lower$`1`
 #>          [,1]     [,2]     [,3]
-#> [1,] 11.33377 17.79719 21.68645
+#> [1,] 11.20647 17.91413 21.94217
 #> 
 #> $mu$lower$`2`
 #>           [,1]      [,2]       [,3]
-#> [1,] -12.12582 -7.452267 -0.3301668
+#> [1,] -12.12254 -7.433414 -0.1706516
 #> 
 #> 
 #> 
 #> $sigma
 #> $sigma$estimate
 #> $sigma$estimate$`1`
-#>          [,1]     [,2]     [,3]
-#> [1,] 2.805934 0.973412 1.470498
+#>          [,1]      [,2]     [,3]
+#> [1,] 2.676086 0.9136812 1.538067
 #> 
 #> $sigma$estimate$`2`
-#>         [,1]     [,2]     [,3]
-#> [1,] 1.01955 2.750253 1.900116
+#>           [,1]     [,2]     [,3]
+#> [1,] 0.9757265 3.101921 2.067543
 #> 
 #> 
 #> $sigma$upper
 #> $sigma$upper$`1`
-#>          [,1]     [,2]     [,3]
-#> [1,] 3.050136 1.054169 1.607198
+#>         [,1]    [,2]     [,3]
+#> [1,] 2.96396 1.00425 1.659892
 #> 
 #> $sigma$upper$`2`
 #>          [,1]     [,2]     [,3]
-#> [1,] 1.101603 3.009897 2.013362
+#> [1,] 1.058371 3.319758 2.244455
 #> 
 #> 
 #> $sigma$lower
 #> $sigma$lower$`1`
-#>          [,1]      [,2]    [,3]
-#> [1,] 2.481494 0.9103495 1.34863
+#>          [,1]      [,2]     [,3]
+#> [1,] 2.421643 0.8391876 1.417103
 #> 
 #> $sigma$lower$`2`
 #>           [,1]     [,2]     [,3]
-#> [1,] 0.9498778 2.505115 1.756415
+#> [1,] 0.9013176 2.865315 1.910581
 #> 
 #> 
 #> 
 #> $beta
 #> $beta$estimate
-#>             [,1]         [,2]        [,3]
-#> [1,] -0.79685177  0.222763919  0.13535118
-#> [2,] -1.97397817 -0.147895603  0.44100573
-#> [3,]  0.09928201 -0.005353139  0.01007736
-#> [4,]  0.17429201  0.013427091 -0.01592751
-#> [5,] -0.18218420  0.183623444  0.02924870
-#> [6,]  0.57678238 -0.151758725 -0.10271142
+#>              [,1]        [,2]        [,3]
+#> [1,]  0.420374334 -0.21621031 -0.05248346
+#> [2,]  0.005684073 -0.18367517  0.04230500
+#> [3,] -0.244491016 -0.22512241  0.08678225
+#> [4,]  0.480478542 -0.83366884  0.03984857
+#> [5,]  0.693709952 -0.04331149 -0.12156931
+#> [6,]  1.004862618 -0.14665353 -0.15933831
 #> 
 #> $beta$upper
-#>            [,1]      [,2]      [,3]
-#> [1,]  0.5959862 0.8908671 0.4630644
-#> [2,] -0.4004136 0.3677746 0.7131303
-#> [3,]  1.6727627 0.6199967 0.2422721
-#> [4,]  1.7875848 0.5789854 0.2501439
-#> [5,]  1.1355597 0.6278717 0.2747697
-#> [6,]  2.0300227 0.2683707 0.1929391
+#>          [,1]       [,2]       [,3]
+#> [1,] 1.510681  0.3607881 0.22442700
+#> [2,] 1.591337  0.4610303 0.34424303
+#> [3,] 1.362749  0.4378531 0.32153004
+#> [4,] 1.781039 -0.3043884 0.25735999
+#> [5,] 2.143448  0.5635266 0.09755194
+#> [6,] 2.201618  0.4339337 0.11784313
 #> 
 #> $beta$lower
 #>            [,1]       [,2]       [,3]
-#> [1,] -2.2069678 -0.2916736 -0.1569097
-#> [2,] -3.3313744 -0.8403146  0.1284087
-#> [3,] -1.4692445 -0.6474915 -0.2887972
-#> [4,] -1.6926678 -0.7082243 -0.3294184
-#> [5,] -1.0688958 -0.4037150 -0.2339808
-#> [6,] -0.7599779 -0.6564322 -0.3485810
+#> [1,] -0.8672615 -0.8341614 -0.3591482
+#> [2,] -1.5233597 -0.6792339 -0.1986393
+#> [3,] -1.3817692 -0.8574147 -0.1629289
+#> [4,] -1.1822415 -1.4199295 -0.2408767
+#> [5,] -0.5519370 -0.7521585 -0.3520891
+#> [6,] -0.3344039 -0.7681154 -0.4011995
 ```
 
 Using the viterbi algorithm we can decode the hidden states according to
@@ -230,12 +230,12 @@ timeseries_plot(x, viterbi, num_subjects, num_variables)
 #> [[1]]
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+<img src="man/figures/README-viterbi-1.png" width="100%" />
 
     #> 
     #> [[2]]
 
-<img src="man/figures/README-unnamed-chunk-6-2.png" width="100%" />
+<img src="man/figures/README-viterbi-2.png" width="100%" />
 
 We can compute the confidence intervals of the state dependent normal
 distributions and compare them to the histogram of
@@ -248,9 +248,9 @@ norm_hist_ci(x, viterbi, num_states, num_subjects, num_variables, hmm_fit,
 #> [[1]]
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-hist_ci-1.png" width="100%" />
 
     #> 
     #> [[2]]
 
-<img src="man/figures/README-unnamed-chunk-7-2.png" width="100%" />
+<img src="man/figures/README-hist_ci-2.png" width="100%" />
