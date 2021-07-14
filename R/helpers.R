@@ -27,3 +27,23 @@ split_vec <- function(vector, start, end, length, exp = FALSE) {
   }
   split(vector[start:end], ceiling(seq_along(vector[start:end])/length))
 }
+
+#' Compute Euclidean distance
+#'
+#' This function computes the euclidean distance between two vectors of
+#' coordinates.
+#'
+#' @param x_positions A vector of positions along the x-axis.
+#' @param y_positions A vector of positions along the y-axis.
+#'
+#' @return A vector of euclidean distances.
+#' @export
+euclidean_distance <- function(x_positions, y_positions) {
+  x_distances <- diff(x_positions)
+  y_distances <- diff(y_positions)
+  euclidean   <- numeric()
+  for (i in 1:length(x_distances)) {
+    euclidean[i] <- sqrt(x_distances[i]^2 + y_distances[i]^2)
+  }
+  euclidean
+}
