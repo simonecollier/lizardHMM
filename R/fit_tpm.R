@@ -35,8 +35,8 @@
 #' design[[1]][, 3] <- rnorm(1000, mean = 5, sd = 1)
 #'
 #' # compute the transition probability matrices
-#' norm_gamma(num_states, num_subjects, num_time, beta, design)
-norm_gamma <- function(num_states, num_subjects, num_time, beta, design) {
+#' fit_tpm(num_states, num_subjects, num_time, beta, design)
+fit_tpm <- function(num_states, num_subjects, num_time, beta, design) {
   gamma <- list()
   for (i in 1:num_subjects) {
     gamma[[i]] <- list()

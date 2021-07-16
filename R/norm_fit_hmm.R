@@ -64,7 +64,7 @@ norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                                num_covariates = num_covariates,
                                working_params = hmm$estimate,
                                state_dep_dist_pooled = state_dep_dist_pooled)
-  gamma <- norm_gamma(num_states, num_subjects, num_time, pn$beta, design)
+  gamma <- fit_tpm(num_states, num_subjects, num_time, pn$beta, design)
 
   if (hessian) {
     h <- hmm$hessian

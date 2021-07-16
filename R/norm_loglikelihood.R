@@ -30,7 +30,7 @@ norm_loglikelihood <- function(working_params, x, design,
   pn        <- norm_natural_params(num_states, num_variables, num_subjects,
                                    num_covariates, working_params,
                                    state_dep_dist_pooled)
-  gamma     <- norm_gamma(num_states, num_subjects, num_time, pn$beta, design)
+  gamma     <- fit_tpm(num_states, num_subjects, num_time, pn$beta, design)
   cum_loglikelihood <- 0
   for (i in 1:num_subjects) {
     s_ind   <- i
