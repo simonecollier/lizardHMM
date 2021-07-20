@@ -18,8 +18,8 @@
 #' @return A list of the natural paramters.
 #' @export
 gam_natural_params <- function(num_states, num_variables, num_subjects,
-                                num_covariates, working_params,
-                                state_dep_dist_pooled = FALSE) {
+                               num_covariates, working_params,
+                               state_dep_dist_pooled = FALSE) {
   ns             <- num_subjects
   alpha_start    <- 1
   alpha_end      <- num_states*num_variables*num_subjects

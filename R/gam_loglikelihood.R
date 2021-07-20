@@ -23,13 +23,13 @@
 #' @return A number indicating the negative loglikelihood
 #' @export
 gam_loglikelihood <- function(working_params, x, design,
-                               num_states, num_variables, num_subjects,
-                               num_covariates,
-                               state_dep_dist_pooled = FALSE) {
+                              num_states, num_variables, num_subjects,
+                              num_covariates,
+                              state_dep_dist_pooled = FALSE) {
   num_time  <- nrow(x)
   pn        <- gam_natural_params(num_states, num_variables, num_subjects,
-                                   num_covariates, working_params,
-                                   state_dep_dist_pooled)
+                                  num_covariates, working_params,
+                                  state_dep_dist_pooled)
   gamma     <- fit_tpm(num_states, num_subjects, num_time, pn$beta, design)
   cum_loglikelihood <- 0
   for (i in 1:num_subjects) {
@@ -40,7 +40,7 @@ gam_loglikelihood <- function(working_params, x, design,
     P   <- rep(1, num_states)
     for (j in 1:num_variables) {
       P <- P*stats::dgamma(x[1, j, i], shape = pn$alpha[[j]][s_ind, ],
-                          scale = pn$theta[[j]][s_ind, ])
+                           scale = pn$theta[[j]][s_ind, ])
     }
     forward_probs     <- pn$delta[[i]]*P
     sum_forward_probs <- sum(forward_probs)

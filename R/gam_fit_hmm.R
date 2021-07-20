@@ -46,7 +46,7 @@ gam_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                          hessian = FALSE) {
   num_time <- nrow(x)
   working_params <- gam_working_params(num_states, num_variables, num_subjects,
-                                        alpha0, theta0, beta0, delta0)
+                                       alpha0, theta0, beta0, delta0)
   hmm   <- stats::nlm(gam_loglikelihood,
                       working_params,
                       x = x,
