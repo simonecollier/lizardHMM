@@ -24,5 +24,5 @@ A list of vectors (one for each subject) of the pseudo-residuals.
 }
 \description{
 This function computes the normal forecast pseudo-residuals of the data \code{x}
-fitted with \code{hmm}.
+fitted with \code{hmm} (with normal state dependent distributions).
 }

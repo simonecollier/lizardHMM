@@ -24,5 +24,5 @@ A list of matrices (one for each subject) of the forward variables.
 }
 \description{
 This function computes the log forward probabilities of the data based on
-the HMM hmm.
+the HMM hmm (with normal state dependent distributions).
 }

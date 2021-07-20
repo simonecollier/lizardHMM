@@ -1,7 +1,7 @@
 #' Compute log forward probabilities
 #'
 #' This function computes the log forward probabilities of the data based on
-#' the HMM hmm.
+#' the HMM hmm (with normal state dependent distributions).
 #'
 #' @param x The data to be fit with an HMM in the form of a 3D array. The
 #'   first index (row) corresponds to time, the second (column) to the
