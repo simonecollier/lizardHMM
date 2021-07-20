@@ -3,11 +3,20 @@
 #' This function computes the log forward probabilities of the data based on
 #' the HMM hmm.
 #'
-#' @inheritParams norm_viterbi
+#' @param x The data to be fit with an HMM in the form of a 3D array. The
+#'   first index (row) corresponds to time, the second (column) to the
+#'   variable number, and the third (matrix number) to the subject number.
+#' @param hmm A list of parameters that specify the normal HMM, including
+#'   `num_states`, `num_variables`, `num_subjects`, `mu`, `sigma`, `gamma`,
+#'   `delta`.
+#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#'   state dependent distribution parameters `mu` and `sigma` should be
+#'   treated as equal for all subjects.
 #'
 #' @return A list of matrices (one for each subject) of the forward variables.
 #' @export
-
+#'
+#' @examples
 norm_logforward <- function(x, hmm, state_dep_dist_pooled = FALSE) {
   n             <- nrow(x)
   num_states    <- hmm$num_states
