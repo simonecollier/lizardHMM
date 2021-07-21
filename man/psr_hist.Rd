@@ -4,10 +4,10 @@
 \alias{psr_hist}
 \title{Plot normal pseudo-residuals}
 \usage{
-psr_hist(forcast_psr, num_subjects)
+psr_hist(forecast_psr, num_subjects)
 }
 \arguments{
-\item{forcast_psr}{A list containing a vector of pseudo-residuals for each
+\item{forecast_psr}{A list containing a vector of pseudo-residuals for each
 subject.}
 
 \item{num_subjects}{The number of subjects/trials that generated the data.}
