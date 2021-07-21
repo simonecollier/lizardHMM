@@ -21,9 +21,8 @@ gam_forecast_psr <- function(x, hmm, state_dep_dist_pooled = FALSE) {
   num_states    <- hmm$num_states
   num_variables <- hmm$num_variables
   num_subjects  <- hmm$num_subjects
-  lalpha        <- gam_logforward(x, hmm,
-                                   state_dep_dist_pooled)
-  forecast_psr   <- list()
+  la            <- gam_logforward(x, hmm, state_dep_dist_pooled)
+  forecast_psr  <- list()
   for (i in 1:num_subjects) {
     s_ind   <- i
     if (state_dep_dist_pooled) {
@@ -31,27 +30,27 @@ gam_forecast_psr <- function(x, hmm, state_dep_dist_pooled = FALSE) {
     }
     pstepmat          <- matrix(NA, n, num_states)
     forecast_psr[[i]] <- rep(NA, n)
-    ind.step          <- 1:n
+    ind_step          <- 1:n
     for (j in 1:num_variables) {
-      ind.step <- sort(intersect(ind.step, which(!is.na(x[, j, i]))))
+      ind_step <- sort(intersect(ind_step, which(!is.na(x[, j, i]))))
     }
-    for (k in ind.step) {
+    for (k in ind_step) {
       for (m in 1:num_states) {
         P   <- 1
         for (j in 1:num_variables) {
           P <- P*stats::pgamma(x[k, j, i], shape = hmm$alpha[[j]][s_ind, m],
-                              scale = hmm$theta[[j]][s_ind, m])
+                               scale = hmm$theta[[j]][s_ind, m])
         }
         pstepmat[k, m] <- P
       }
     }
-    if (1 %in% ind.step) {
+    if (1 %in% ind_step) {
       forecast_psr[[i]][1] <- stats::qnorm(hmm$delta[[i]] %*% pstepmat[1, ])
     }
     for (t in 2:n) {
-      c <- max(lalpha[[i]][, t - 1])
-      a <- exp(lalpha[[i]][, t - 1] - c)
-      if (t %in% ind.step) {
+      c <- max(la[[i]][, t - 1])
+      a <- exp(la[[i]][, t - 1] - c)
+      if (t %in% ind_step) {
         forecast_psr[[i]][t] <- stats::qnorm(t(a) %*%
                                                (hmm$gamma[[i]][[t]]/sum(a)) %*%
                                                pstepmat[t, ])

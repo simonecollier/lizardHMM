@@ -22,13 +22,13 @@ gam_logforward <- function(x, hmm, state_dep_dist_pooled = FALSE) {
   num_states    <- hmm$num_states
   num_variables <- hmm$num_variables
   num_subjects  <- hmm$num_subjects
-  lalpha        <- list()
+  la        <- list()
   for (i in 1:num_subjects) {
     s_ind   <- i
     if (state_dep_dist_pooled) {
       s_ind <- 1
     }
-    lalpha[[i]] <- matrix(NA, nrow = num_states, ncol = n)
+    la[[i]] <- matrix(NA, nrow = num_states, ncol = n)
     P           <- rep(1, num_states)
     for (j in 1:num_variables) {
       P <- P*stats::dgamma(x[1, j, i], shape = hmm$alpha[[j]][s_ind, ],
@@ -38,7 +38,7 @@ gam_logforward <- function(x, hmm, state_dep_dist_pooled = FALSE) {
     sum_forward_probs <- sum(forward_probs)
     loglikelihood     <- log(sum_forward_probs)
     forward_probs     <- forward_probs/sum_forward_probs
-    lalpha[[i]][, 1]  <- loglikelihood + log(forward_probs)
+    la[[i]][, 1]      <- loglikelihood + log(forward_probs)
 
     for (t in 2:n) {
       P     <- rep(1, num_states)
@@ -52,8 +52,8 @@ gam_logforward <- function(x, hmm, state_dep_dist_pooled = FALSE) {
       sum_forward_probs <- sum(forward_probs)
       loglikelihood     <- loglikelihood + log(sum_forward_probs)
       forward_probs     <- forward_probs/sum_forward_probs
-      lalpha[[i]][, t]  <- loglikelihood + log(forward_probs)
+      la[[i]][, t]      <- loglikelihood + log(forward_probs)
     }
   }
-  lalpha
+  la
 }

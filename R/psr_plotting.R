@@ -94,8 +94,8 @@ psr_qq <- function(forecast_psr, num_subjects) {
   for (i in num_subjects) {
     data <- data.frame('Time' = 1:length(forecast_psr[[i]]),
                        'pseudo_residual' = forecast_psr[[i]])
-    p <- ggplot(data, aes(pseudo_residual, alpha=0.5)) +
-      stat_qq(size=0.1) +
+    p <- ggplot(data, aes(sample = pseudo_residual, alpha = 0.5)) +
+      stat_qq(size = 0.1) +
       stat_qq_line() +
       theme_bw() +
       theme(panel.grid.major = ggplot2::element_blank(),
@@ -122,7 +122,7 @@ psr_qq <- function(forecast_psr, num_subjects) {
 psr_acf <- function(forecast_psr, num_subjects) {
   plots <- list()
   for (i in num_subjects) {
-    p <- forecast::ggAcf(forecast_psr[[i]]) +
+    p <- forecast::ggAcf(x = forecast_psr[[i]]) +
       theme_bw() +
       theme(panel.grid.major = ggplot2::element_blank(),
             panel.grid.minor = ggplot2::element_blank(),
