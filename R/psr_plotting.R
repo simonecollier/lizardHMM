@@ -119,11 +119,10 @@ psr_qq <- function(forecast_psr, num_subjects) {
 #' @return An acf plot of the normal-pseudo residuals for each subject.
 #' @export
 #' @importFrom ggplot2 ggplot aes theme theme_bw
-#' @importFrom forecast ggAcf
 psr_acf <- function(forecast_psr, num_subjects) {
   plots <- list()
   for (i in num_subjects) {
-    p <- ggAcf(x = forecast_psr[[i]]) +
+    p <- forecast::ggAcf(x = forecast_psr[[i]]) +
       theme_bw() +
       theme(panel.grid.major = ggplot2::element_blank(),
             panel.grid.minor = ggplot2::element_blank(),

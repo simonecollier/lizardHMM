@@ -15,7 +15,7 @@
 #'
 #' @return A list of the data and the states that generated the data.
 #' @export
-#' @example
+#' @examples
 #' # define parameters
 #' hmm <-  list(num_states = 3,
 #'              num_variables = 2,

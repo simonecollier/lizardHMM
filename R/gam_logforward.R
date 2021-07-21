@@ -15,8 +15,6 @@
 #'
 #' @return A list of matrices (one for each subject) of the forward variables.
 #' @export
-#'
-#' @examples
 gam_logforward <- function(x, hmm, state_dep_dist_pooled = FALSE) {
   n             <- nrow(x)
   num_states    <- hmm$num_states

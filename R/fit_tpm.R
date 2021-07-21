@@ -16,7 +16,7 @@
 #' @return A list containing a list for each subject/trial of the transition
 #'   probability matrices at each time step.
 #' @export
-#' @example
+#' @examples
 #' # define parameters
 #' num_states   <- 3
 #' num_subjects <- 1

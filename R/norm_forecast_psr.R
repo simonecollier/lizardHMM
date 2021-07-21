@@ -15,7 +15,6 @@
 #'
 #' @return A list of vectors (one for each subject) of the pseudo-residuals.
 #' @export
-
 norm_forecast_psr <- function(x, hmm, state_dep_dist_pooled = FALSE) {
   n             <- nrow(x)
   num_states    <- hmm$num_states
