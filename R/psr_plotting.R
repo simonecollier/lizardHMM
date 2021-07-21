@@ -122,7 +122,7 @@ psr_qq <- function(forecast_psr, num_subjects) {
 psr_acf <- function(forecast_psr, num_subjects) {
   plots <- list()
   for (i in num_subjects) {
-    p <- forecast_psr[[i]] %>% forecast::Acf(plot = FALSE) %>% autoplot +
+    p <- forecast::ggAcf(x = forecast_psr[[i]]) +
       theme_bw() +
       theme(panel.grid.major = ggplot2::element_blank(),
             panel.grid.minor = ggplot2::element_blank(),
