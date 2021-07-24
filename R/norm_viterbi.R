@@ -47,7 +47,7 @@ norm_viterbi <- function(x, hmm, state_dep_dist_pooled = FALSE) {
       }
       if (num_covariates != 0) {
         forward_probs <- apply(state_probs[[i]][t - 1, ]*
-                               hmm$gamma[[i]][[t]], 2, max)*P
+                                 hmm$gamma[[i]][[t]], 2, max)*P
       } else {
         forward_probs <- apply(state_probs[[i]][t - 1, ]*
                                  hmm$gamma[[i]][[1]], 2, max)*P
@@ -56,8 +56,13 @@ norm_viterbi <- function(x, hmm, state_dep_dist_pooled = FALSE) {
     }
     sequence[n, i] <- which.max(state_probs[[i]][n, ])
     for (t in (n - 1):1){
-      sequence[t, i] <- which.max(hmm$gamma[[i]][[t]][, sequence[t + 1]]*
-                                    state_probs[[i]][t, ])
+      if (num_covariates != 0) {
+        sequence[t, i] <- which.max(hmm$gamma[[i]][[t]][, sequence[t + 1]]*
+                                      state_probs[[i]][t, ])
+      } else {
+        sequence[t, i] <- which.max(hmm$gamma[[i]][[1]][, sequence[t + 1]]*
+                                      state_probs[[i]][t, ])
+      }
     }
   }
   sequence
