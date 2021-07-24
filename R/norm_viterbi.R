@@ -50,7 +50,7 @@ norm_viterbi <- function(x, hmm, state_dep_dist_pooled = FALSE) {
                                hmm$gamma[[i]][[t]], 2, max)*P
       } else {
         forward_probs <- apply(state_probs[[i]][t - 1, ]*
-                                 hmm$gamma[[i]], 2, max)*P
+                                 hmm$gamma[[i]][[1]], 2, max)*P
       }
       state_probs[[i]][t, ] <- forward_probs/sum(forward_probs)
     }
