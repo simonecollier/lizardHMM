@@ -45,8 +45,13 @@ norm_viterbi <- function(x, hmm, state_dep_dist_pooled = FALSE) {
         P <- P*stats::dnorm(x[t, j, i], hmm$mu[[j]][s_ind, ],
                             hmm$sigma[[j]][s_ind, ])
       }
-      forward_probs <- apply(state_probs[[i]][t - 1, ]*
+      if (num_covariates != 0) {
+        forward_probs <- apply(state_probs[[i]][t - 1, ]*
                                hmm$gamma[[i]][[t]], 2, max)*P
+      } else {
+        forward_probs <- apply(state_probs[[i]][t - 1, ]*
+                                 hmm$gamma[[i]], 2, max)*P
+      }
       state_probs[[i]][t, ] <- forward_probs/sum(forward_probs)
     }
     sequence[n, i] <- which.max(state_probs[[i]][n, ])
