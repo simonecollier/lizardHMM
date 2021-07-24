@@ -44,27 +44,36 @@ norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                          mu0, sigma0, beta0, delta0,
                          state_dep_dist_pooled = FALSE, iterlim = 100,
                          hessian = FALSE) {
-  num_time <- nrow(x)
+  num_time       <- nrow(x)
   working_params <- norm_working_params(num_states, num_variables, num_subjects,
                                         mu0, sigma0, beta0, delta0)
-  hmm <- stats::nlm(norm_loglikelihood,
-                    working_params,
-                    x = x,
-                    design = design,
-                    num_states = num_states,
-                    num_variables = num_variables,
-                    num_subjects = num_subjects,
-                    num_covariates = num_covariates,
-                    state_dep_dist_pooled = state_dep_dist_pooled,
-                    iterlim = iterlim,
-                    hessian = hessian)
+  hmm   <- stats::nlm(norm_loglikelihood,
+                      working_params,
+                      x = x,
+                      design = design,
+                      num_states = num_states,
+                      num_variables = num_variables,
+                      num_subjects = num_subjects,
+                      num_covariates = num_covariates,
+                      state_dep_dist_pooled = state_dep_dist_pooled,
+                      iterlim = iterlim,
+                      hessian = hessian)
   pn    <- norm_natural_params(num_states = num_states,
                                num_variables = num_variables,
                                num_subjects = num_subjects,
                                num_covariates = num_covariates,
                                working_params = hmm$estimate,
                                state_dep_dist_pooled = state_dep_dist_pooled)
-  gamma <- fit_tpm(num_states, num_subjects, num_time, pn$beta, design)
+  if (num_covariates != 0) {
+    gamma <- fit_tpm(num_states, num_subjects, num_time, pn$beta, design)
+  } else {
+    gamma <- fit_tpm(num_states, num_subjects, 1, pn$beta, design)
+  }
+  mllk <- hmm$minimum
+  p <- length(working_params)
+  n <- sum(!is.na(x))
+  AIC <- 2*(mllk + p)
+  BIC <- 2*mllk + p*log(n)
 
   if (hessian) {
     h <- hmm$hessian
@@ -90,6 +99,8 @@ norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                   working_params = hmm$estimate,
                   code = hmm$code,
                   max_loglikelihood = hmm$minimum,
+                  AIC = AIC,
+                  BIC = BIC,
                   inverse_hessian = h))
     }
     return(list(num_states = num_states,
@@ -104,6 +115,8 @@ norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                 working_params = hmm$estimate,
                 code = hmm$code,
                 max_loglikelihood = hmm$minimum,
+                AIC = AIC,
+                BIC = BIC,
                 hessian = hmm$hessian))
   }
   list(num_states = num_states,
@@ -117,5 +130,7 @@ norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
        gamma = gamma,
        working_params = hmm$estimate,
        code = hmm$code,
-       max_loglikelihood = hmm$minimum)
+       max_loglikelihood = hmm$minimum,
+       AIC = AIC,
+       BIC = BIC)
 }
