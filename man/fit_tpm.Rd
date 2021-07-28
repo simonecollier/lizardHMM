@@ -4,12 +4,15 @@
 \alias{fit_tpm}
 \title{Compute transition probability matrices}
 \usage{
-fit_tpm(num_states, num_subjects, num_time, beta, design)
+fit_tpm(num_states, num_subjects, num_covariates, num_time, beta, design)
 }
 \arguments{
 \item{num_states}{The number of states in the desired HMM.}
 
 \item{num_subjects}{The number of subjects/trials that generated the data.}
+
+\item{num_covariates}{The number of covariates in the data that the
+transition probability matrix depends on.}
 
 \item{num_time}{A value indicating the length of the data.}
 
@@ -28,25 +31,4 @@ probability matrices at each time step.
 This function computes the time dependent transition probability matrix
 from the corresponding vector \code{design_vec} and the matrix of regression
 coefficients \code{beta}.
-}
-\examples{
-# define parameters
-num_states   <- 3
-num_subjects <- 1
-num_time     <- 1000
-beta             <- matrix(c(0.01, 0.02, 0.001,
-                             0.01, 0.03, 0.004,
-                             0.01, 0.01, 0.003,
-                             0.01, 0.04, 0.002,
-                             0.01, 0.01, 0.004,
-                             0.01, 0.03, 0.001),
-                             ncol = 3, nrow = 6, byrow = TRUE)
-design           <- list(matrix(0, nrow = 1000, ncol = 3))
-design[[1]][, 1] <- 1 # First column is the intercept
-design[[1]][, 2] <- sample(c(0, 1), size = 1000,
-                           prob = c(0.3, 0.7), replace = TRUE)
-design[[1]][, 3] <- rnorm(1000, mean = 5, sd = 1)
-
-# compute the transition probability matrices
-fit_tpm(num_states, num_subjects, num_time, beta, design)
 }
