@@ -16,37 +16,30 @@
 #' @return A list of matrices (one for each subject) of the forward variables.
 #' @export
 norm_logforward <- function(x, hmm, state_dep_dist_pooled = FALSE) {
-  n             <- nrow(x)
+  num_time      <- nrow(x)
   num_states    <- hmm$num_states
   num_variables <- hmm$num_variables
   num_subjects  <- hmm$num_subjects
   la            <- list()
+  allprobs      <- norm_allprobs(num_states, num_variables,
+                                 num_subjects, num_time,
+                                 x, hmm, state_dep_dist_pooled = FALSE)
   for (i in 1:num_subjects) {
-    s_ind   <- i
-    if (state_dep_dist_pooled) {
-      s_ind <- 1
-    }
-    la[[i]] <- matrix(NA, nrow = num_states, ncol = n)
-    P           <- rep(1, num_states)
-    for (j in 1:num_variables) {
-      P <- P*stats::dnorm(x[1, j, i], hmm$mu[[j]][s_ind, ],
-                          hmm$sigma[[j]][s_ind, ])
-    }
-    forward_probs     <- hmm$delta[[i]]*P
+    la[[i]] <- matrix(NA, nrow = num_states, ncol = num_time)
+
+    forward_probs     <- hmm$delta[[i]]*allprobs[[i]][1, ]
     sum_forward_probs <- sum(forward_probs)
     loglikelihood     <- log(sum_forward_probs)
     forward_probs     <- forward_probs/sum_forward_probs
-    la[[i]][, 1]  <- loglikelihood + log(forward_probs)
+    la[[i]][, 1]      <- loglikelihood + log(forward_probs)
 
-    for (t in 2:n) {
-      P     <- rep(1, num_states)
-      for (j in 1:num_variables) {
-        if (!is.na(x[t, j, i])) {
-          P <- P*stats::dnorm(x[t, j, i], hmm$mu[[j]][s_ind, ],
-                              hmm$sigma[[j]][s_ind, ])
-        }
+    for (t in 2:num_time) {
+      if (num_covariates != 0) {
+        forward_probs <- forward_probs %*%
+                           hmm$gamma[[i]][, , t]*allprobs[[i]][t, ]
+      } else {
+        forward_probs <- forward_probs %*% hmm$gamma[[i]]*allprobs[[i]][t, ]
       }
-      forward_probs     <- forward_probs %*% hmm$gamma[[i]][[t]]*P
       sum_forward_probs <- sum(forward_probs)
       loglikelihood     <- loglikelihood + log(sum_forward_probs)
       forward_probs     <- forward_probs/sum_forward_probs
