@@ -16,7 +16,7 @@
 #' @return A list of vectors (one for each subject) of the pseudo-residuals.
 #' @export
 norm_forecast_psr <- function(x, hmm, state_dep_dist_pooled = FALSE) {
-  n             <- nrow(x)
+  num_time      <- nrow(x)
   num_states    <- hmm$num_states
   num_variables <- hmm$num_variables
   num_subjects  <- hmm$num_subjects
@@ -28,9 +28,9 @@ norm_forecast_psr <- function(x, hmm, state_dep_dist_pooled = FALSE) {
     if (state_dep_dist_pooled) {
       s_ind <- 1
     }
-    pstepmat          <- matrix(NA, n, num_states)
-    forecast_psr[[i]] <- rep(NA, n)
-    ind_step          <- 1:n
+    pstepmat          <- matrix(NA, num_time, num_states)
+    forecast_psr[[i]] <- rep(NA, num_time)
+    ind_step          <- 1:num_time
     for (j in 1:num_variables) {
       ind_step <- sort(intersect(ind_step, which(!is.na(x[, j, i]))))
     }
@@ -47,13 +47,20 @@ norm_forecast_psr <- function(x, hmm, state_dep_dist_pooled = FALSE) {
     if (1 %in% ind_step) {
       forecast_psr[[i]][1] <- stats::qnorm(hmm$delta[[i]] %*% pstepmat[1, ])
     }
-    for (t in 2:n) {
+    for (t in 2:num_time) {
       c <- max(la[[i]][, t - 1])
       a <- exp(la[[i]][, t - 1] - c)
-      if (t %in% ind_step) {
-        forecast_psr[[i]][t] <- stats::qnorm(t(a) %*%
-                                               (hmm$gamma[[i]][[t]]/sum(a)) %*%
-                                               pstepmat[t, ])
+      if (num_covariates != 0) {
+        if (t %in% ind_step) {
+          forecast_psr[[i]][t] <- stats::qnorm(t(a) %*%
+                                                 (hmm$gamma[[i]][, , t]/sum(a))
+                                               %*% pstepmat[t, ])
+        }
+      } else {
+        if (t %in% ind_step) {
+          forecast_psr[[i]][t] <- stats::qnorm(t(a) %*% (hmm$gamma[[i]]/sum(a))
+                                               %*% pstepmat[t, ])
+        }
       }
     }
   }
