@@ -64,11 +64,9 @@ norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                                num_covariates = num_covariates,
                                working_params = hmm$estimate,
                                state_dep_dist_pooled = state_dep_dist_pooled)
-  if (num_covariates != 0) {
-    gamma <- fit_tpm(num_states, num_subjects, num_time, pn$beta, design)
-  } else {
-    gamma <- fit_tpm(num_states, num_subjects, 1, pn$beta, design)
-  }
+  gamma <- fit_tpm(num_states, num_subjects, num_covariates, num_time,
+                   pn$beta, design)
+
   mllk <- hmm$minimum
   p <- length(working_params)
   n <- sum(!is.na(x))
