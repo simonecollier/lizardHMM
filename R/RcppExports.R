@@ -5,3 +5,7 @@ foralg <- function(n, N, foo, gamma, allprobs) {
     .Call('_lizardHMM_foralg', PACKAGE = 'lizardHMM', n, N, foo, gamma, allprobs)
 }
 
+foralg_covar <- function(n, N, foo, gamma, allprobs) {
+    .Call('_lizardHMM_foralg_covar', PACKAGE = 'lizardHMM', n, N, foo, gamma, allprobs)
+}
+

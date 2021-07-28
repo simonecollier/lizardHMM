@@ -26,9 +26,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// foralg_covar
+double foralg_covar(int n, int N, arma::mat foo, arma::vec gamma, arma::mat allprobs);
+RcppExport SEXP _lizardHMM_foralg_covar(SEXP nSEXP, SEXP NSEXP, SEXP fooSEXP, SEXP gammaSEXP, SEXP allprobsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type foo(fooSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type allprobs(allprobsSEXP);
+    rcpp_result_gen = Rcpp::wrap(foralg_covar(n, N, foo, gamma, allprobs));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_lizardHMM_foralg", (DL_FUNC) &_lizardHMM_foralg, 5},
+    {"_lizardHMM_foralg_covar", (DL_FUNC) &_lizardHMM_foralg_covar, 5},
     {NULL, NULL, 0}
 };
 
