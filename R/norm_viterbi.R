@@ -18,49 +18,40 @@
 #'   given subject.
 #' @export
 norm_viterbi <- function(x, hmm, state_dep_dist_pooled = FALSE) {
-  n             <- nrow(x)
-  num_states    <- hmm$num_states
-  num_variables <- hmm$num_variables
-  num_subjects  <- hmm$num_subjects
-  state_probs   <- list()
-  sequence      <- matrix(0, nrow = n, ncol = num_subjects)
+  num_time       <- nrow(x)
+  num_states     <- hmm$num_states
+  num_variables  <- hmm$num_variables
+  num_subjects   <- hmm$num_subjects
+  num_covariates <- hmm$num_covariates
+  state_probs    <- list()
+  sequence       <- matrix(0, nrow = n, ncol = num_subjects)
+  allprobs       <- norm_allprobs(num_states, num_variables,
+                                  num_subjects, num_time, x, pn,
+                                  state_dep_dist_pooled = FALSE)
 
   for (i in 1:num_subjects) {
-    s_ind   <- i
-    if (state_dep_dist_pooled) {
-      s_ind <- 1
-    }
-    state_probs[[i]] <- matrix(0, nrow = n, ncol = num_states)
-    P                <- rep(1, num_states)
-    for (j in 1:num_variables) {
-      P <- P*stats::dnorm(x[1, j, i], hmm$mu[[j]][s_ind, ],
-                          hmm$sigma[[j]][s_ind, ])
-    }
-    forward_probs         <- hmm$delta[[i]]*P
+    prob                  <- allprobs[[i]]
+    state_probs[[i]]      <- matrix(0, nrow = num_time, ncol = num_states)
+    forward_probs         <- hmm$delta[[i]]*prob[1, ]
     state_probs[[i]][1, ] <- forward_probs/sum(forward_probs)
 
-    for (t in 2:n) {
-      P <- rep(1, num_states)
-      for (j in 1:num_variables) {
-        P <- P*stats::dnorm(x[t, j, i], hmm$mu[[j]][s_ind, ],
-                            hmm$sigma[[j]][s_ind, ])
-      }
+    for (t in 2:num_time) {
       if (num_covariates != 0) {
         forward_probs <- apply(state_probs[[i]][t - 1, ]*
-                                 hmm$gamma[[i]][[t]], 2, max)*P
+                                 hmm$gamma[[i]][, , t], 2, max)*prob[t, ]
       } else {
         forward_probs <- apply(state_probs[[i]][t - 1, ]*
-                                 hmm$gamma[[i]][[1]], 2, max)*P
+                                 hmm$gamma[[i]], 2, max)*prob[t, ]
       }
       state_probs[[i]][t, ] <- forward_probs/sum(forward_probs)
     }
-    sequence[n, i] <- which.max(state_probs[[i]][n, ])
-    for (t in (n - 1):1){
+    sequence[num_time, i] <- which.max(state_probs[[i]][num_time, ])
+    for (t in (num_time - 1):1){
       if (num_covariates != 0) {
-        sequence[t, i] <- which.max(hmm$gamma[[i]][[t]][, sequence[t + 1]]*
+        sequence[t, i] <- which.max(hmm$gamma[[i]][, sequence[t + 1], t]*
                                       state_probs[[i]][t, ])
       } else {
-        sequence[t, i] <- which.max(hmm$gamma[[i]][[1]][, sequence[t + 1]]*
+        sequence[t, i] <- which.max(hmm$gamma[[i]][, sequence[t + 1]]*
                                       state_probs[[i]][t, ])
       }
     }
