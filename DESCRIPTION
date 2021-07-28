@@ -23,6 +23,9 @@ Imports:
     forecast,
     egg,
     ggplot2,
-    stats
+    stats,
+    Rcpp
 URL: https://github.com/simonecollier/lizardHMM
 BugReports: https://github.com/simonecollier/lizardHMM/issues
+LinkingTo: 
+    Rcpp, RcppArmadillo
