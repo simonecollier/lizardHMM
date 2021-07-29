@@ -9,6 +9,14 @@
 using namespace Rcpp;
 using namespace arma;
 
+//' Execute the forward algorithm
+//'
+//' @param n The length of the timeseries.
+//' @param N The number of states in the HMM.
+//' @param foo The initial state distributions (delta).
+//' @param gamma The transition probability matrix.
+//' @param allprobs As outputted by the funtions norm_allporbs
+//' @export
 // [[Rcpp::export]]
 double foralg(int n, int N, arma::mat foo, arma::mat gamma, arma::mat allprobs) {
 
