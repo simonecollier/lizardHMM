@@ -251,7 +251,8 @@ norm_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
       s_ind <- 1
     }
     for (j in 1:num_variables) {
-      range       <- seq(min(x[, j, i]), max(x[, j, i]), length.out = 100)
+      range       <- seq(min(x[, j, i], na.rm = TRUE),
+                         max(x[, j, i], na.rm = TRUE), length.out = 100)
       xc          <- length(range)
       density.lst <- list()
       for (k in 1:num_states) {
