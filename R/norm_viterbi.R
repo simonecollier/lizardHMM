@@ -24,7 +24,7 @@ norm_viterbi <- function(x, hmm, state_dep_dist_pooled = FALSE) {
   num_subjects   <- hmm$num_subjects
   num_covariates <- hmm$num_covariates
   state_probs    <- list()
-  sequence       <- matrix(0, nrow = n, ncol = num_subjects)
+  sequence       <- matrix(0, nrow = num_time, ncol = num_subjects)
   allprobs       <- norm_allprobs(num_states, num_variables,
                                   num_subjects, num_time, x, hmm,
                                   state_dep_dist_pooled = FALSE)
