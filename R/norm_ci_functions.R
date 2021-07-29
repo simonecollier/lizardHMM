@@ -352,7 +352,8 @@ norm_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
                        plot.title = ggplot2::element_text(hjust = 0.5)) +
         ggplot2::labs(x = Var[j], y = '')
 
-      xfit <- seq(min(subvar_data$Observation), max(subvar_data$Observation),
+      xfit <- seq(min(subvar_data$Observation, na.rm = TRUE),
+                  max(subvar_data$Observation, na.rm = TRUE),
                   by = x_step)
       marginal <- numeric(length(xfit))
       for (k in 1:num_states) {
