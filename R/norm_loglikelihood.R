@@ -39,10 +39,10 @@ norm_loglikelihood <- function(working_params, x, design,
     delta <- matrix(pn$delta[[i]], ncol = num_states)
     if (num_covariates == 0) {
       loglikelihood <- foralg(num_time, num_states,
-                              delta, gamma[[i]], allprobs)
+                              delta, gamma[[i]], allprobs[[i]])
     } else {
       loglikelihood <- foralg_covar(num_time, num_states,
-                                    delta, gamma[[i]], allprobs)
+                                    delta, gamma[[i]], allprobs[[i]])
     }
     cum_loglikelihood <- cum_loglikelihood + loglikelihood
   }
