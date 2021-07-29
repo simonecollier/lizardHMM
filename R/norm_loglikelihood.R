@@ -36,12 +36,13 @@ norm_loglikelihood <- function(working_params, x, design,
                        pn$beta, design)
   cum_loglikelihood <- 0
   for (i in num_subjects) {
+    delta <- matrix(pn$delta[[i]], ncol = num_states)
     if (num_covariates == 0) {
       loglikelihood <- foralg(num_time, num_states,
-                              pn$delta[[i]], gamma[[i]], allprobs)
+                              delta, gamma[[i]], allprobs)
     } else {
       loglikelihood <- foralg_covar(num_time, num_states,
-                                    pn$delta[[i]], gamma[[i]], allprobs)
+                                    delta, gamma[[i]], allprobs)
     }
     cum_loglikelihood <- cum_loglikelihood + loglikelihood
   }
