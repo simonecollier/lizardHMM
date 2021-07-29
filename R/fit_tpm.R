@@ -48,7 +48,7 @@ fit_tpm <- function(num_states, num_subjects, num_covariates, num_time,
   }
   if (num_covariates == 0) {
     for (i in num_subjects) {
-      gamma[[i]] <- gamma[[i]][, , 1]
+      gamma[[i]] <- as.matrix(gamma[[i]][, , 1])
     }
   }
   gamma
