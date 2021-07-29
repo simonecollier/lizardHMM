@@ -8,8 +8,8 @@
 #'   first index (row) corresponds to time, the second (column) to the
 #'   variable number, and the third (matrix number) to the subject number.
 #' @param hmm A list of parameters that specify the normal HMM, including
-#'   `num_states`, `num_variables`, `num_subjects`, `mu`, `sigma`, `gamma`,
-#'   `delta`.
+#'   `num_states`, `num_variables`, `num_subjects`, `num_covariates`, `mu`,
+#'   `sigma`, `gamma`, `delta`.
 #' @param state_dep_dist_pooled A logical variable indiacting whether the
 #'   state dependent distribution parameters `mu` and `sigma` should be
 #'   treated as equal for all subjects.

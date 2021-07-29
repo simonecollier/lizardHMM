@@ -12,8 +12,8 @@ first index (row) corresponds to time, the second (column) to the
 variable number, and the third (matrix number) to the subject number.}
 
 \item{hmm}{A list of parameters that specify the normal HMM, including
-\code{num_states}, \code{num_variables}, \code{num_subjects}, \code{mu}, \code{sigma}, \code{gamma},
-\code{delta}.}
+\code{num_states}, \code{num_variables}, \code{num_subjects}, \code{num_covariates}, \code{mu},
+\code{sigma}, \code{gamma}, \code{delta}.}
 
 \item{state_dep_dist_pooled}{A logical variable indiacting whether the
 state dependent distribution parameters \code{mu} and \code{sigma} should be
