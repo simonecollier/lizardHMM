@@ -10,7 +10,7 @@
 #' @param allprobs As outputted by the funtions norm_allporbs
 #' @export
 foralg <- function(n, N, foo, gamma, allprobs) {
-    .Call('_lizardHMM_foralg', PACKAGE = 'lizardHMM', n, N, foo, gamma, allprobs)
+    .Call(`_lizardHMM_foralg`, n, N, foo, gamma, allprobs)
 }
 
 #' Execute the forward algorithm
@@ -22,6 +22,6 @@ foralg <- function(n, N, foo, gamma, allprobs) {
 #' @param allprobs As outputted by the funtions norm_allporbs
 #' @export
 foralg_covar <- function(n, N, foo, gamma, allprobs) {
-    .Call('_lizardHMM_foralg_covar', PACKAGE = 'lizardHMM', n, N, foo, gamma, allprobs)
+    .Call(`_lizardHMM_foralg_covar`, n, N, foo, gamma, allprobs)
 }
 
