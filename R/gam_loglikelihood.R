@@ -30,37 +30,21 @@ gam_loglikelihood <- function(working_params, x, design,
   pn        <- gam_natural_params(num_states, num_variables, num_subjects,
                                   num_covariates, working_params,
                                   state_dep_dist_pooled)
-  gamma     <- fit_tpm(num_states, num_subjects, num_time, pn$beta, design)
+  allprobs  <- gam_allprobs(num_states, num_variables, num_subjects, num_time,
+                            x, pn, state_dep_dist_pooled)
+  gamma     <- fit_tpm(num_states, num_subjects, num_covariates, num_time,
+                       pn$beta, design)
   cum_loglikelihood <- 0
-  for (i in 1:num_subjects) {
-    s_ind   <- i
-    if (state_dep_dist_pooled) {
-      s_ind <- 1
+  for (i in num_subjects) {
+    delta <- matrix(pn$delta[[i]], ncol = num_states)
+    if (num_covariates == 0) {
+      loglikelihood <- foralg(num_time, num_states,
+                              delta, gamma[[i]], allprobs[[i]])
+    } else {
+      loglikelihood <- foralg_covar(num_time, num_states,
+                                    delta, gamma[[i]], allprobs[[i]])
     }
-    P   <- rep(1, num_states)
-    for (j in 1:num_variables) {
-      P <- P*stats::dgamma(x[1, j, i], shape = pn$alpha[[j]][s_ind, ],
-                           scale = pn$theta[[j]][s_ind, ])
-    }
-    forward_probs     <- pn$delta[[i]]*P
-    sum_forward_probs <- sum(forward_probs)
-    loglikelihood     <- log(sum_forward_probs)
-    forward_probs     <- forward_probs/sum_forward_probs
-
-    for (t in 2:num_time) {
-      P     <- rep(1, num_states)
-      for (j in 1:num_variables) {
-        if (!is.na(x[t, j, i])) {
-          P <- P*stats::dgamma(x[t, j, i], shape = pn$alpha[[j]][s_ind, ],
-                              scale = pn$theta[[j]][s_ind, ])
-        }
-      }
-      forward_probs     <- forward_probs %*% gamma[[i]][[t]]*P
-      sum_forward_probs <- sum(forward_probs)
-      loglikelihood     <- loglikelihood + log(sum_forward_probs)
-      forward_probs     <- forward_probs/sum_forward_probs
-    }
-    cum_loglikelihood   <- cum_loglikelihood + loglikelihood
+    cum_loglikelihood <- cum_loglikelihood + loglikelihood
   }
   - cum_loglikelihood
 }

@@ -251,7 +251,8 @@ gam_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
       s_ind <- 1
     }
     for (j in 1:num_variables) {
-      range       <- seq(min(x[, j, i]), max(x[, j, i]), length.out = 100)
+      range       <- seq(min(x[, j, i], na.rm = TRUE),
+                         max(x[, j, i], na.rm = TRUE), length.out = 100)
       xc          <- length(range)
       density.lst <- list()
       for (k in 1:num_states) {
@@ -351,7 +352,8 @@ gam_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
                        plot.title = ggplot2::element_text(hjust = 0.5)) +
         ggplot2::labs(x = Var[j], y = '')
 
-      xfit <- seq(min(subvar_data$Observation), max(subvar_data$Observation),
+      xfit <- seq(min(subvar_data$Observation, na.rm = TRUE),
+                  max(subvar_data$Observation, na.rm = TRUE),
                   by = x_step)
       marginal <- numeric(length(xfit))
       for (k in 1:num_states) {

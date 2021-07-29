@@ -64,7 +64,14 @@ gam_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                                num_covariates = num_covariates,
                                working_params = hmm$estimate,
                                state_dep_dist_pooled = state_dep_dist_pooled)
-  gamma <- fit_tpm(num_states, num_subjects, num_time, pn$beta, design)
+  gamma <- fit_tpm(num_states, num_subjects, num_covariates, num_time,
+                   pn$beta, design)
+
+  mllk <- hmm$minimum
+  p    <- length(working_params)
+  n    <- sum(!is.na(x))
+  AIC  <- 2*(mllk + p)
+  BIC  <- 2*mllk + p*log(n)
 
   if (hessian) {
     h <- hmm$hessian
