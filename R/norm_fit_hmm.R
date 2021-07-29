@@ -68,10 +68,10 @@ norm_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                    pn$beta, design)
 
   mllk <- hmm$minimum
-  p <- length(working_params)
-  n <- sum(!is.na(x))
-  AIC <- 2*(mllk + p)
-  BIC <- 2*mllk + p*log(n)
+  p    <- length(working_params)
+  n    <- sum(!is.na(x))
+  AIC  <- 2*(mllk + p)
+  BIC  <- 2*mllk + p*log(n)
 
   if (hessian) {
     h <- hmm$hessian
