@@ -22,8 +22,8 @@ norm_generate_sample <- function(num_sample, hmm, design,
   num_subjects   <- hmm$num_subjects
   num_covariates <- hmm$num_covariates
   state          <- matrix(0, nrow = num_sample, ncol = num_subjects)
-  gamma          <- fit_tpm(hmm$num_states, num_subjects, num_covariates, num_time,
-                           beta, design)
+  gamma          <- fit_tpm(hmm$num_states, num_subjects, num_covariates,
+                            num_time, hmm$beta, design)
   for (i in 1:num_subjects) {
     state[1, i]   <- sample(state_vec, 1, prob = hmm$delta[[i]])
     for (t in 2:num_sample) {
