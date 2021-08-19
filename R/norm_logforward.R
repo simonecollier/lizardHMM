@@ -34,7 +34,7 @@ norm_logforward <- function(x, hmm, state_dep_dist_pooled = FALSE) {
     la[[i]][, 1]      <- loglikelihood + log(forward_probs)
 
     for (t in 2:num_time) {
-      if (num_covariates != 0) {
+      if (hmm$num_covariates != 0) {
         forward_probs <- forward_probs %*%
                            hmm$gamma[[i]][, , t]*allprobs[[i]][t, ]
       } else {

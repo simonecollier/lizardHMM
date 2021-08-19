@@ -22,6 +22,7 @@
 #'
 #' @return A number indicating the negative loglikelihood
 #' @export
+
 norm_loglikelihood <- function(working_params, x, design,
                                num_states, num_variables, num_subjects,
                                num_covariates,
@@ -48,3 +49,4 @@ norm_loglikelihood <- function(working_params, x, design,
   }
   - cum_loglikelihood
 }
+

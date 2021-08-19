@@ -20,8 +20,7 @@ norm_forecast_psr <- function(x, hmm, state_dep_dist_pooled = FALSE) {
   num_states    <- hmm$num_states
   num_variables <- hmm$num_variables
   num_subjects  <- hmm$num_subjects
-  la            <- norm_logforward(x, hmm,
-                                   state_dep_dist_pooled)
+  la            <- norm_logforward(x, hmm, state_dep_dist_pooled)
   forecast_psr  <- list()
   for (i in 1:num_subjects) {
     s_ind   <- i
@@ -50,7 +49,7 @@ norm_forecast_psr <- function(x, hmm, state_dep_dist_pooled = FALSE) {
     for (t in 2:num_time) {
       c <- max(la[[i]][, t - 1])
       a <- exp(la[[i]][, t - 1] - c)
-      if (num_covariates != 0) {
+      if (hmm$num_covariates != 0) {
         if (t %in% ind_step) {
           forecast_psr[[i]][t] <- stats::qnorm(t(a) %*%
                                                  (hmm$gamma[[i]][, , t]/sum(a))

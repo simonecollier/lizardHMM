@@ -11,6 +11,12 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+library(tidyverse)
+library(lme4)
+library(grid)
+library(gridExtra)
+library(dplyr)
+library(forecast)
 ```
 
 # lizardHMM
@@ -37,7 +43,7 @@ devtools::install_github("simonecollier/lizardHMM")
 ## Example
 
 Set up a basic HMM with data distributed according to normal state dependent 
-distributions. This HMM will have 3 states, 2 variables, 1 subject, and 2 
+distributions. This HMM will have 3 states, 2 variables, 1 subject, and no 
 covariates (included in the computation of the transition probability matrix).
 We also define the design matrix which indicates the values of the covariates
 at each point in time. Then we go about generating data from this HMM.
@@ -46,27 +52,23 @@ at each point in time. Then we go about generating data from this HMM.
 library(lizardHMM)
 
 hmm1 <- list(num_states = 3,
-             num_variables = 2,
+             num_variables = 1,
              num_subjects = 1,
-             mu = list(matrix(c(12, 18, 22), ncol = 3, nrow = 1, byrow = TRUE), 
-                       matrix(c(-12, -7, 0), ncol = 3, nrow = 1, byrow = TRUE)),
-             sigma = list(matrix(c(3, 1, 1.5), ncol = 3, nrow = 1, byrow = TRUE), 
-                          matrix(c(1, 3, 2), ncol = 3, nrow = 1, byrow = TRUE)),
-             beta  = matrix(c(0.01, 0.02, 0.001,
-                              0.01, 0.03, 0.004,
-                              0.01, 0.01, 0.003,
-                              0.01, 0.04, 0.002,
-                              0.01, 0.01, 0.004,
-                              0.01, 0.03, 0.001), ncol = 3, nrow = 6, byrow = TRUE),
+             num_covariates = 0,
+             mu = list(matrix(c(12, 18, 22), ncol = 3, nrow = 1, byrow = TRUE)),
+             sigma = list(matrix(c(3, 1, 1.5), ncol = 3, nrow = 1, byrow = TRUE)),
+             beta  = matrix(c(-4.931936,
+                              -4.316150,
+                              -5.080883,
+                              -3.541777,
+                              -3.793888,
+                              -3.551066), nrow = 6, byrow = TRUE),
              delta = list(c(0.3, 0.2, 0.5)))
 
-num_sample <- 1000
+num_sample <- 10000
 
 design           <- list(matrix(0, nrow = 1000, ncol = 3))
 design[[1]][, 1] <- 1 # First column is the intercept
-design[[1]][, 2] <- sample(c(0, 1), size = 1000, 
-                           prob = c(0.3, 0.7), replace = TRUE)
-design[[1]][, 3] <- rnorm(1000, mean = 5, sd = 1)
 
 sample <- norm_generate_sample(num_sample, hmm1, design)
 x      <- sample$observ
@@ -84,7 +86,7 @@ overlayed with the state dependent normal distributions.
 
 ```{r norm_hist, echo = TRUE}
 norm_hist(sample, hmm1$num_states, hmm1$num_variables, hmm1$num_subjects,
-          hmm1, width = 1, x_step = 0.2)
+          hmm1, width = 0.05, x_step = 0.1)
 ```
 
 Now we can try fitting the data we generated with a basic HMM with reasonable 
@@ -92,19 +94,17 @@ guesses for the initial parameters.
 
 ```{r hmm_fit, echo = TRUE, warning = FALSE, message = FALSE}
 num_states = 3
-num_variables = 2
+num_variables = 1
 num_subjects = 1
-num_covariates = 2
-mu0 <- list(matrix(c(11, 19, 23), ncol = 3, nrow = 1, byrow = TRUE),
-            matrix(c(-10, -5, 1), ncol = 3, nrow = 1, byrow = TRUE))
-sigma0 <- list(matrix(c(3, 3, 3), ncol = 3, nrow = 1, byrow = TRUE),
-               matrix(c(3, 3, 3), ncol = 3, nrow = 1, byrow = TRUE))
-beta0 <- matrix(c(-2, 0, 0,
-                  -2, 0, 0,
-                  -2, 0, 0,
-                  -2, 0, 0,
-                  -2, 0, 0,
-                  -2, 0, 0), ncol = 3, nrow = 6, byrow = TRUE)
+num_covariates = 0
+mu0 <- list(matrix(c(11, 19, 23), ncol = 3, nrow = 1, byrow = TRUE))
+sigma0 <- list(matrix(c(3, 3, 3), ncol = 3, nrow = 1, byrow = TRUE))
+beta0 <- matrix(c(-2,
+                  -2,
+                  -2,
+                  -2,
+                  -2,
+                  -2), nrow = 6, byrow = TRUE)
 delta0 <- list(c(1/3, 1/3, 1/3))
 
 hmm_fit <- norm_fit_hmm(x, design, num_states, num_variables, num_subjects,
@@ -134,9 +134,18 @@ distributions and compare them to the histogram of data.
 ```{r hist_ci, echo = TRUE}
 norm_hist_ci(x, viterbi, num_states, num_subjects, num_variables, hmm_fit, 
              state_dep_dist_pooled = FALSE,
-             width = 1, n = 100, level = 0.975, x_step = 0.2)
+             width = 0.05, n = 100, level = 0.975, x_step = 0.1)
 ```
 
+The normal pseudo-residuals can be computed and the plots displayed below.
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+pseudo_residuals <- norm_forecast_psr(x, hmm_fit)
+psr_plot(pseudo_residuals, num_subjects)
+psr_hist(pseudo_residuals, num_subjects)
+psr_qq(pseudo_residuals, num_subjects)
+psr_acf(pseudo_residuals, num_subjects)
+```
 
 
 

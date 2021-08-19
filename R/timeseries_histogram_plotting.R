@@ -81,7 +81,7 @@ norm_hist <- function(sample, num_states, num_variables, num_subjects,
         geom_histogram(data = subvar_data,
                        aes(x = Observation),
                        binwidth = width,
-                       colour = "cornsilk4",
+                       colour = "grey",
                        fill = "white") +
         theme_bw() +
         ggtitle(Sub[i]) +

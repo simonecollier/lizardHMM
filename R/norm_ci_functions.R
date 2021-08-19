@@ -322,7 +322,7 @@ norm_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
                          hmm, state_dep_dist_pooled = FALSE,
                          width = 1, n = 100, level = 0.975, x_step = 0.2) {
 
-  sample        <- norm_ci(hmm, state_dep_dist_pooled, n,
+  sample         <- norm_ci(hmm, state_dep_dist_pooled, n,
                             level, raw_sample = TRUE)
   conf_intervals <- norm_dist_ci_data(x, num_states, num_variables,
                                       num_subjects, sample,
@@ -343,7 +343,7 @@ norm_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
         ggplot2::geom_histogram(data = subvar_data,
                                 aes(x = Observation),
                                 binwidth = width,
-                                colour = "cornsilk4",
+                                colour = "grey",
                                 fill = "white") +
         ggplot2::theme_bw() +
         ggplot2::ggtitle(Sub[i]) +
