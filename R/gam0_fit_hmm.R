@@ -43,11 +43,11 @@
 #'
 #' @return A list of parameters that specify the fitted gamma HMM.
 #' @export
-gam_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
-                        num_covariates,
-                        alpha0, theta0, zweight0, beta0, delta0,
-                        state_dep_dist_pooled = FALSE, iterlim = 100,
-                        hessian = FALSE) {
+gam0_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
+                         num_covariates,
+                         alpha0, theta0, zweight0, beta0, delta0,
+                         state_dep_dist_pooled = FALSE, iterlim = 100,
+                         hessian = FALSE) {
   num_time <- nrow(x)
   working_params <- gam0_working_params(num_states, num_variables, num_subjects,
                                         alpha0, theta0, zweight0, beta0, delta0)
