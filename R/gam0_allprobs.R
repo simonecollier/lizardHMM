@@ -41,7 +41,6 @@ gam0_allprobs <- function(num_states, num_variables, num_subjects, num_time,
                                  scale = pn$theta[[j]][s_ind, ])*
                   c(1 - pn$zweight[[j]][s_ind], rep(1, num_states - 1))
           }
-          print(P)
         }
       }
       allprobs[[i]][t, ] <- P
