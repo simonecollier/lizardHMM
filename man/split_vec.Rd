@@ -4,7 +4,7 @@
 \alias{split_vec}
 \title{Split vector into list}
 \usage{
-split_vec(vector, start, end, length, exp = FALSE)
+split_vec(vector, start, end, length, exp = FALSE, tanh = FALSE)
 }
 \arguments{
 \item{vector}{The vector to be split into a list.}

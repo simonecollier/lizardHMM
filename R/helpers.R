@@ -20,9 +20,13 @@
 #' split_vec(c(1, 2, 3, 4, 5, 6, 7, 8, 9), 3, 6, 2)
 #' split_vec(c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6), 2, 7, 3, exp = TRUE)
 
-split_vec <- function(vector, start, end, length, exp = FALSE) {
+split_vec <- function(vector, start, end, length, exp = FALSE, tanh = FALSE) {
   if (exp) {
     return(split(exp(vector[start:end]),
+                 ceiling(seq_along(exp(vector[start:end]))/length)))
+  }
+  if (tanh) {
+    return(split(tanh(vector[start:end]),
                  ceiling(seq_along(exp(vector[start:end]))/length)))
   }
   split(vector[start:end], ceiling(seq_along(vector[start:end])/length))
