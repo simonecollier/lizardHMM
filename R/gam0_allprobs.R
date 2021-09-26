@@ -39,8 +39,9 @@ gam0_allprobs <- function(num_states, num_variables, num_subjects, num_time,
           } else {
             P <- P*stats::dgamma(x[t, j, i], shape = pn$alpha[[j]][s_ind, ],
                                  scale = pn$theta[[j]][s_ind, ])*
-              c(1 - pn$zweight[[j]][s_ind], 1, 1)
+                  c(1 - pn$zweight[[j]][s_ind], 1, 1)
           }
+          print(P)
         }
       }
       allprobs[[i]][t, ] <- P
