@@ -61,7 +61,8 @@ gam0_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                       num_covariates = num_covariates,
                       state_dep_dist_pooled = state_dep_dist_pooled,
                       iterlim = iterlim,
-                      hessian = hessian)
+                      hessian = hessian,
+                      print.level = 2)
   pn    <- gam0_natural_params(num_states = num_states,
                                num_variables = num_variables,
                                num_subjects = num_subjects,
