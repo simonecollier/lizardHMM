@@ -32,8 +32,8 @@ gam_allprobs <- function(num_states, num_variables, num_subjects, num_time,
       P     <- rep(1, num_states)
       for (j in 1:num_variables) {
         if (!is.na(x[t, j, i])) {
-          P <- P*stats::dgamma(x[t, j, i], pn$alpha[[j]][s_ind, ],
-                              pn$theta[[j]][s_ind, ])
+          P <- P*stats::dgamma(x[t, j, i], shape = pn$alpha[[j]][s_ind, ],
+                              scale = pn$theta[[j]][s_ind, ])
         }
       }
       allprobs[[i]][t, ] <- P
