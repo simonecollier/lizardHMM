@@ -11,7 +11,8 @@ timeseries_plot(
   num_variables,
   variable_names = c("Var 1", "Var 2", "Var 3"),
   subject_names = c("Subject 1", "Subject 2", "Subject 3", "Subject 4"),
-  length = 300
+  start = 1,
+  end = 300
 )
 }
 \arguments{

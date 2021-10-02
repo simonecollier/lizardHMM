@@ -21,14 +21,13 @@ timeseries_plot <- function(x, states, num_subjects, num_variables,
                             variable_names = c("Var 1", "Var 2", "Var 3"),
                             subject_names = c("Subject 1", "Subject 2",
                                               "Subject 3", "Subject 4"),
-                            length = 300) {
-  n      <- nrow(x)
+                            start = 1, end = 300) {
   plots  <- list()
   for (i in 1:num_subjects) {
-    data       <- data.frame('State' = as.factor(states[1:length, i]))
-    data$Time  <- 1:length
+    data       <- data.frame('State' = as.factor(states[start:end, i]))
+    data$Time  <- start:end
     for (j in 1:num_variables) {
-      data$Observation <- x[1:length, j, i]
+      data$Observation <- x[start:end, j, i]
       p <- ggplot(data, ggplot2::aes(x = Time, y = Observation)) +
         ggplot2::theme_light() +
         ggtitle(subject_names[i]) +
@@ -166,12 +165,13 @@ gam0_hist_viterbi <- function(x, viterbi, num_states, num_subjects,
                   max(subvar_data$Observation, na.rm = TRUE),
                   by = x_step)
 
-      yfit <- c(hmm$zweight, dgamma(xfit[2:length(xfit)],
-                                    shape = hmm$alpha[[j]][s_ind, k],
-                                 scale = hmm$theta[[j]][s_ind, k])*hmm$zweight)
+      yfit <- c(hmm$zweight[[j]][i], dgamma(xfit[2:length(xfit)],
+                                    shape = hmm$alpha[[j]][s_ind, 1],
+                                 scale = hmm$theta[[j]][s_ind, 1])*
+                  (1 - hmm$zweight[[j]][i]))
       yfit <- yfit * sum(subvar_data$State == 1) * width
       df   <- data.frame('xfit' = xfit, 'yfit' = yfit,
-                         col = as.factor(rep(k, length(xfit))))
+                         col = as.factor(rep(1, length(xfit))))
       h    <- h + ggplot2::geom_line(data = df,
                                      aes(xfit, yfit, colour = col),
                                      lwd = 0.7)
@@ -194,7 +194,7 @@ gam0_hist_viterbi <- function(x, viterbi, num_states, num_subjects,
       plots <- c(plots, list(h))
     }
   }
-  plots
+  list(plots = plots, xfit = xfit, marginal = marginal)
   # ggarrange(plotlist = plots, common.legend = TRUE, legend = "bottom",
   #           labels = c("Subject 1",
   #                      "Subject 1",
