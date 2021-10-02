@@ -1,24 +1,21 @@
-#' Convert working parameters to a vector of natural parameters
+#' Get indices of parameters in working vector
 #'
-#' This funciton converts the vecgtor of working parameters to a vector of
-#' natural parameters not inculding delta.
+#' This function finds the indices for each parameter of the normal HMM within
+#' the vector of working parameters outputted by `norm_working_params()`.
 #'
 #' @param num_states The number of states in the desired HMM.
 #' @param num_variables The number of variables in the data.
 #' @param num_subjects The number of subjects/trials that generated the data.
 #' @param num_covariates The number of covariates in the data that the
 #'   transition probability matrix depends on.
-#' @param working_params A vector of the working normal parameters for the
-#'   HMM.
 #' @param state_dep_dist_pooled A logical variable indiacting whether the
 #'   state dependent distribution parameters `mu` and `sigma` should be
 #'   treated as equal for all subjects.
 #'
-#' @return A vector of the natural parameters.
+#' @return A list of the start and end indices.
 #' @export
-norm_natural_vec <- function(num_states, num_variables, num_subjects,
-                             num_covariates, working_params,
-                             state_dep_dist_pooled = FALSE) {
+norm_working_ind <- function(num_states, num_variables, num_subjects,
+                             num_covariates, state_dep_dist_pooled = FALSE) {
   mu_start    <- 1
   mu_end      <- num_states*num_variables*num_subjects
   sigma_end   <- mu_end + num_states*num_variables*num_subjects
@@ -31,12 +28,54 @@ norm_natural_vec <- function(num_states, num_variables, num_subjects,
   sigma_start <- mu_end + 1
   beta_start  <- sigma_end + 1
   beta_end    <- sigma_end + (num_states^2 - num_states)*(num_covariates + 1)
+  delta_start <- beta_end + 1
+  delta_end   <- delta_start + num_states - 2
 
-  natural                        <- numeric()
-  natural[mu_start:mu_end]       <- working_params[mu_start:mu_end]
-  natural[sigma_start:sigma_end] <- exp(working_params[sigma_start:sigma_end])
-  natural[beta_start:beta_end]   <- working_params[beta_start:beta_end]
+  list(mu_start    = mu_start,
+       mu_end      = mu_end,
+       mu_len      = mu_len,
+       sigma_start = sigma_start,
+       sigma_end   = sigma_end,
+       sigma_len   = sigma_len,
+       beta_start  = beta_start,
+       beta_end    = beta_end,
+       delta_start = delta_start,
+       delta_end   = delta_end)
+}
 
+
+#' Convert working parameters to a vector of natural parameters
+#'
+#' This function converts the vector of working parameters to a vector of
+#' natural parameters not including delta.
+#'
+#' @param num_states The number of states in the desired HMM.
+#' @param num_variables The number of variables in the data.
+#' @param num_subjects The number of subjects/trials that generated the data.
+#' @param num_covariates The number of covariates in the data that the
+#'   transition probability matrix depends on.
+#' @param working_params A vector of the working normal parameters for the
+#'   HMM.
+#' @param state_dep_dist_pooled A logical variable indicating whether the
+#'   state dependent distribution parameters `mu` and `sigma` should be
+#'   treated as equal for all subjects.
+#'
+#' @return A vector of the natural parameters.
+#' @export
+norm_natural_vec <- function(num_states, num_variables, num_subjects,
+                             num_covariates, working_params,
+                             state_dep_dist_pooled = FALSE) {
+
+  ind <- norm_working_ind(num_states, num_variables, num_subjects,
+                          num_covariates, state_dep_dist_pooled = FALSE)
+
+  natural                                <- numeric()
+  natural[ind$mu_start:ind$mu_end]       <- working_params[ind$mu_start:
+                                                             ind$mu_end]
+  natural[ind$sigma_start:ind$sigma_end] <- exp(working_params[ind$sigma_start:
+                                                                 ind$sigma_end])
+  natural[ind$beta_start:ind$beta_end]   <- working_params[ind$beta_start:
+                                                             ind$beta_end]
   natural
 }
 
@@ -69,25 +108,20 @@ norm_natural_vec <- function(num_states, num_variables, num_subjects,
 norm_ci_data <- function(num_states, num_variables, num_subjects,
                          num_covariates, estimate_vec, upper_vec, lower_vec,
                          state_dep_dist_pooled = FALSE) {
-  mu_start    <- 1
-  mu_end      <- num_states*num_variables*num_subjects
-  sigma_end   <- mu_end + num_states*num_variables*num_subjects
-  mu_len      <- sigma_len <- num_subjects*num_states
-  if (state_dep_dist_pooled) {
-    mu_end    <- num_states*num_variables
-    sigma_end <- mu_end + num_states*num_variables
-    mu_len    <- sigma_len <- num_states
-  }
-  sigma_start <- mu_end + 1
-  beta_start  <- sigma_end + 1
-  beta_end    <- sigma_end + (num_states^2 - num_states)*(num_covariates + 1)
 
-  mu_estimate    <- split_vec(estimate_vec, mu_start, mu_end, mu_len)
-  mu_upper       <- split_vec(upper_vec, mu_start, mu_end, mu_len)
-  mu_lower       <- split_vec(lower_vec, mu_start, mu_end, mu_len)
-  sigma_estimate <- split_vec(estimate_vec, sigma_start, sigma_end, sigma_len)
-  sigma_upper    <- split_vec(upper_vec, sigma_start, sigma_end, sigma_len)
-  sigma_lower    <- split_vec(lower_vec, sigma_start, sigma_end, sigma_len)
+  ind <- norm_working_ind(num_states, num_variables, num_subjects,
+                          num_covariates, state_dep_dist_pooled = FALSE)
+
+  mu_estimate    <- split_vec(estimate_vec, ind$mu_start,
+                              ind$mu_end, ind$mu_len)
+  mu_upper       <- split_vec(upper_vec, ind$mu_start, ind$mu_end, ind$mu_len)
+  mu_lower       <- split_vec(lower_vec, ind$mu_start, ind$mu_end, ind$mu_len)
+  sigma_estimate <- split_vec(estimate_vec, ind$sigma_start,
+                              ind$sigma_end, ind$sigma_len)
+  sigma_upper    <- split_vec(upper_vec, ind$sigma_start, ind$sigma_end,
+                              ind$sigma_len)
+  sigma_lower    <- split_vec(lower_vec, ind$sigma_start, ind$sigma_end,
+                              ind$sigma_len)
   for (j in 1:num_variables) {
     mu_estimate[[j]]    <- matrix(mu_estimate[[j]], ncol = num_states,
                                   byrow = TRUE)
@@ -109,11 +143,11 @@ norm_ci_data <- function(num_states, num_variables, num_subjects,
                          upper = sigma_upper,
                          lower = sigma_lower)
 
-  beta_estimate <- matrix(estimate_vec[beta_start:beta_end],
+  beta_estimate <- matrix(estimate_vec[ind$beta_start:ind$beta_end],
                           nrow = num_states^2 - num_states)
-  beta_upper    <- matrix(upper_vec[beta_start:beta_end],
+  beta_upper    <- matrix(upper_vec[ind$beta_start:ind$beta_end],
                           nrow = num_states^2 - num_states)
-  beta_lower    <- matrix(lower_vec[beta_start:beta_end],
+  beta_lower    <- matrix(lower_vec[ind$beta_start:ind$beta_end],
                           nrow = num_states^2 - num_states)
   beta          <- list(estimate = beta_estimate,
                         upper = beta_upper,
@@ -138,7 +172,7 @@ norm_ci_data <- function(num_states, num_variables, num_subjects,
 #' @param n The number of samples in the Monte Carlo fitting.
 #' @param level A number indicating the level of confidence for the desired
 #'   interval.
-#' @param raw_sample A logical variable indicating wheter to simply output the
+#' @param raw_sample A logical variable indicating whether to simply output the
 #'   `n` sampled `mu`s and `sigma`s from the Monte Carlo estimate.
 #'
 #' @return Either a list of the sampled `mu`s and `sigma`s or the list of
@@ -180,20 +214,13 @@ norm_ci <- function(hmm, state_dep_dist_pooled = FALSE, n = 100, level= 0.975,
                                      state_dep_dist_pooled)
   }
   if (raw_sample) {
-    mu_start    <- 1
-    mu_end      <- num_states*num_variables*num_subjects
-    sigma_end   <- mu_end + num_states*num_variables*num_subjects
-    mu_len      <- sigma_len <- num_subjects*num_states
-    if (state_dep_dist_pooled) {
-      mu_end    <- num_states*num_variables
-      sigma_end <- mu_end + num_states*num_variables
-      mu_len    <- sigma_len <- num_states
-    }
-    sigma_start <- mu_end + 1
+    ind <- norm_working_ind(num_states, num_variables, num_subjects,
+                            num_covariates, state_dep_dist_pooled = FALSE)
     sample      <- list()
     for (l in 1:n) {
-      mu    <- split_vec(natural[l, ], mu_start, mu_end, mu_len)
-      sigma <- split_vec(natural[l, ], sigma_start, sigma_end, sigma_len)
+      mu    <- split_vec(natural[l, ], ind$mu_start, ind$mu_end, ind$mu_len)
+      sigma <- split_vec(natural[l, ], ind$sigma_start, ind$sigma_end,
+                         ind$sigma_len)
       for (j in 1:num_variables) {
         mu[[j]]    <- matrix(mu[[j]], ncol = num_states, byrow = TRUE)
         sigma[[j]] <- matrix(sigma[[j]], ncol = num_states, byrow = TRUE)
@@ -302,7 +329,7 @@ norm_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
 #' @param hmm A list of parameters that specify the normal HMM, including
 #'   `num_states`, `num_variables`, `num_subjects`, `mu`, `sigma`, `gamma`,
 #'   `delta`.
-#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#' @param state_dep_dist_pooled A logical variable indicating whether the
 #'   state dependent distribution parameters `mu` and `sigma` should be
 #'   treated as equal for all subjects.
 #' @param width The width of the histogram bins.

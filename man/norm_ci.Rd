@@ -26,7 +26,7 @@ treated as equal for all subjects.}
 \item{level}{A number indicating the level of confidence for the desired
 interval.}
 
-\item{raw_sample}{A logical variable indicating wheter to simply output the
+\item{raw_sample}{A logical variable indicating whether to simply output the
 \code{n} sampled \code{mu}s and \code{sigma}s from the Monte Carlo estimate.}
 }
 \value{

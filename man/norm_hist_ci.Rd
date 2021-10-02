@@ -37,7 +37,7 @@ the subject in the corresponding column.}
 \code{num_states}, \code{num_variables}, \code{num_subjects}, \code{mu}, \code{sigma}, \code{gamma},
 \code{delta}.}
 
-\item{state_dep_dist_pooled}{A logical variable indiacting whether the
+\item{state_dep_dist_pooled}{A logical variable indicating whether the
 state dependent distribution parameters \code{mu} and \code{sigma} should be
 treated as equal for all subjects.}
 

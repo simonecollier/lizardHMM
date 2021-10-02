@@ -40,30 +40,18 @@
 norm_natural_params <- function(num_states, num_variables, num_subjects,
                                 num_covariates, working_params,
                                 state_dep_dist_pooled = FALSE) {
-  ns          <- num_subjects
-  mu_start    <- 1
-  mu_end      <- num_states*num_variables*num_subjects
-  sigma_end   <- mu_end + num_states*num_variables*num_subjects
-  mu_len      <- sigma_len <- num_subjects*num_states
-  if (state_dep_dist_pooled) {
-    mu_end    <- num_states*num_variables
-    sigma_end <- mu_end + num_states*num_variables
-    mu_len    <- sigma_len <- num_states
-  }
-  sigma_start <- mu_end + 1
-  beta_start  <- sigma_end + 1
-  beta_end    <- sigma_end + (num_states^2 - num_states)*(num_covariates + 1)
-  delta_start <- beta_end + 1
-  delta_end   <- length(working_params)
 
-  mu    <- split_vec(working_params, mu_start, mu_end, mu_len)
-  sigma <- split_vec(working_params, sigma_start, sigma_end, sigma_len,
-                     exp = TRUE)
+  ind <- norm_working_ind(num_states, num_variables, num_subjects,
+                          num_covariates, state_dep_dist_pooled = FALSE)
+
+  mu    <- split_vec(working_params, ind$mu_start, ind$mu_end, ind$mu_len)
+  sigma <- split_vec(working_params, ind$sigma_start, ind$sigma_end,
+                     ind$sigma_len, exp = TRUE)
   for (j in 1:num_variables) {
     mu[[j]]    <- matrix(mu[[j]], ncol = num_states, byrow = TRUE)
     sigma[[j]] <- matrix(sigma[[j]], ncol = num_states, byrow = TRUE)
   }
-  beta <- matrix(working_params[beta_start:beta_end],
+  beta <- matrix(working_params[ind$beta_start:ind$beta_end],
                  nrow = num_states^2 - num_states)
   delta <- list()
   if (num_states == 1) {
@@ -72,7 +60,7 @@ norm_natural_params <- function(num_states, num_variables, num_subjects,
       return(list(mu = mu, sigma = sigma, gamma = gamma, delta = delta))
     }
   }
-  d <- split_vec(working_params, delta_start, delta_end, num_states - 1)
+  d <- split_vec(working_params, ind$delta_start, ind$delta_end, num_states - 1)
   for (i in 1:num_subjects) {
     foo        <- c(1, exp(d[[i]]))
     delta[[i]] <- foo/sum(foo)
