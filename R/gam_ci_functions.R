@@ -1,3 +1,49 @@
+#' Get indices of parameters in working vector
+#'
+#' This function finds the indices for each parameter of the gamma HMM within
+#' the vector of working parameters outputted by `gam_working_params()`.
+#'
+#' @param num_states The number of states in the desired HMM.
+#' @param num_variables The number of variables in the data.
+#' @param num_subjects The number of subjects/trials that generated the data.
+#' @param num_covariates The number of covariates in the data that the
+#'   transition probability matrix depends on.
+#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#'   state dependent distribution parameters `mu` and `sigma` should be
+#'   treated as equal for all subjects.
+#'
+#' @return A list of the start and end indices.
+#' @export
+gam_working_ind <- function(num_states, num_variables, num_subjects,
+                             num_covariates, state_dep_dist_pooled = FALSE) {
+  alpha_start    <- 1
+  alpha_end      <- num_states*num_variables*num_subjects
+  theta_end      <- alpha_end + num_states*num_variables*num_subjects
+  alpha_len      <- theta_len <- num_subjects*num_states
+  if (state_dep_dist_pooled) {
+    alpha_end    <- num_states*num_variables
+    theta_end    <- alpha_end + num_states*num_variables
+    alpha_len    <- theta_len <- num_states
+  }
+  theta_start <- alpha_end + 1
+  beta_start  <- theta_end + 1
+  beta_end    <- theta_end + (num_states^2 - num_states)*(num_covariates + 1)
+  delta_start <- beta_end + 1
+  delta_end   <- delta_start + num_states - 2
+
+  list(alpha_start = alpha_start,
+       alpha_end   = alpha_end,
+       alpha_len   = alpha_len,
+       theta_start = theta_start,
+       theta_end   = theta_end,
+       theta_len   = theta_len,
+       beta_start  = beta_start,
+       beta_end    = beta_end,
+       delta_start = delta_start,
+       delta_end   = delta_end)
+}
+
+
 #' Convert working parameters to a vector of natural parameters
 #'
 #' This funciton converts the vecgtor of working parameters to a vector of
@@ -19,24 +65,17 @@
 gam_natural_vec <- function(num_states, num_variables, num_subjects,
                             num_covariates, working_params,
                             state_dep_dist_pooled = FALSE) {
-  alpha_start <- 1
-  alpha_end   <- num_states*num_variables*num_subjects
-  theta_end   <- alpha_end + num_states*num_variables*num_subjects
-  alpha_len   <- theta_len <- num_subjects*num_states
-  if (state_dep_dist_pooled) {
-    alpha_end <- num_states*num_variables
-    theta_end <- alpha_end + num_states*num_variables
-    alpha_len <- theta_len <- num_states
-  }
-  theta_start <- alpha_end + 1
-  beta_start  <- theta_end + 1
-  beta_end    <- theta_end + (num_states^2 - num_states)*(num_covariates + 1)
 
-  natural                        <- numeric()
-  natural[alpha_start:alpha_end] <- exp(working_params[alpha_start:alpha_end])
-  natural[theta_start:theta_end] <- exp(working_params[theta_start:theta_end])
-  natural[beta_start:beta_end]   <- working_params[beta_start:beta_end]
+  ind <- gam_working_ind(num_states, num_variables, num_subjects,
+                         num_covariates, state_dep_dist_pooled = FALSE)
 
+  natural <- numeric()
+  natural[ind$alpha_start:ind$alpha_end] <- exp(working_params[ind$alpha_start:
+                                                                 ind$alpha_end])
+  natural[ind$theta_start:ind$theta_end] <- exp(working_params[ind$theta_start:
+                                                                 ind$theta_end])
+  natural[ind$beta_start:ind$beta_end]   <- working_params[ind$beta_start:
+                                                             ind$beta_end]
   natural
 }
 
@@ -69,25 +108,22 @@ gam_natural_vec <- function(num_states, num_variables, num_subjects,
 gam_ci_data <- function(num_states, num_variables, num_subjects,
                         num_covariates, estimate_vec, upper_vec, lower_vec,
                         state_dep_dist_pooled = FALSE) {
-  alpha_start <- 1
-  alpha_end   <- num_states*num_variables*num_subjects
-  theta_end   <- alpha_end + num_states*num_variables*num_subjects
-  alpha_len   <- theta_len <- num_subjects*num_states
-  if (state_dep_dist_pooled) {
-    alpha_end <- num_states*num_variables
-    theta_end <- alpha_end + num_states*num_variables
-    alpha_len <- theta_len <- num_states
-  }
-  theta_start <- alpha_end + 1
-  beta_start  <- theta_end + 1
-  beta_end    <- theta_end + (num_states^2 - num_states)*(num_covariates + 1)
 
-  alpha_estimate <- split_vec(estimate_vec, alpha_start, alpha_end, alpha_len)
-  alpha_upper    <- split_vec(upper_vec, alpha_start, alpha_end, alpha_len)
-  alpha_lower    <- split_vec(lower_vec, alpha_start, alpha_end, alpha_len)
-  theta_estimate <- split_vec(estimate_vec, theta_start, theta_end, theta_len)
-  theta_upper    <- split_vec(upper_vec, theta_start, theta_end, theta_len)
-  theta_lower    <- split_vec(lower_vec, theta_start, theta_end, theta_len)
+  ind <- gam_working_ind(num_states, num_variables, num_subjects,
+                         num_covariates, state_dep_dist_pooled = FALSE)
+
+  alpha_estimate <- split_vec(estimate_vec, ind$alpha_start,
+                              ind$alpha_end, ind$alpha_len)
+  alpha_upper    <- split_vec(upper_vec, ind$alpha_start,
+                              ind$alpha_end, ind$alpha_len)
+  alpha_lower    <- split_vec(lower_vec, ind$alpha_start,
+                              ind$alpha_end, ind$alpha_len)
+  theta_estimate <- split_vec(estimate_vec, ind$theta_start,
+                              ind$theta_end, ind$theta_len)
+  theta_upper    <- split_vec(upper_vec, ind$theta_start,
+                              ind$theta_end, ind$theta_len)
+  theta_lower    <- split_vec(lower_vec, ind$theta_start,
+                              ind$theta_end, ind$theta_len)
   for (j in 1:num_variables) {
     alpha_estimate[[j]] <- matrix(alpha_estimate[[j]], ncol = num_states,
                                   byrow = TRUE)
@@ -109,11 +145,11 @@ gam_ci_data <- function(num_states, num_variables, num_subjects,
                          upper = theta_upper,
                          lower = theta_lower)
 
-  beta_estimate <- matrix(estimate_vec[beta_start:beta_end],
+  beta_estimate <- matrix(estimate_vec[ind$beta_start:ind$beta_end],
                           nrow = num_states^2 - num_states)
-  beta_upper    <- matrix(upper_vec[beta_start:beta_end],
+  beta_upper    <- matrix(upper_vec[ind$beta_start:ind$beta_end],
                           nrow = num_states^2 - num_states)
-  beta_lower    <- matrix(lower_vec[beta_start:beta_end],
+  beta_lower    <- matrix(lower_vec[ind$beta_start:ind$beta_end],
                           nrow = num_states^2 - num_states)
   beta          <- list(estimate = beta_estimate,
                         upper = beta_upper,
@@ -180,20 +216,14 @@ gam_ci <- function(hmm, state_dep_dist_pooled = FALSE, n = 100, level= 0.975,
                                     state_dep_dist_pooled)
   }
   if (raw_sample) {
-    alpha_start <- 1
-    alpha_end   <- num_states*num_variables*num_subjects
-    theta_end   <- alpha_end + num_states*num_variables*num_subjects
-    alpha_len   <- theta_len <- num_subjects*num_states
-    if (state_dep_dist_pooled) {
-      alpha_end <- num_states*num_variables
-      theta_end <- alpha_end + num_states*num_variables
-      alpha_len <- theta_len <- num_states
-    }
-    theta_start <- alpha_end + 1
+    ind <- gam_working_ind(num_states, num_variables, num_subjects,
+                           num_covariates, state_dep_dist_pooled = FALSE)
     sample      <- list()
     for (l in 1:n) {
-      alpha <- split_vec(natural[l, ], alpha_start, alpha_end, alpha_len)
-      theta <- split_vec(natural[l, ], theta_start, theta_end, theta_len)
+      alpha <- split_vec(natural[l, ], ind$alpha_start,
+                         ind$alpha_end, ind$alpha_len)
+      theta <- split_vec(natural[l, ], ind$theta_start,
+                         ind$theta_end, ind$theta_len)
       for (j in 1:num_variables) {
         alpha[[j]] <- matrix(alpha[[j]], ncol = num_states, byrow = TRUE)
         theta[[j]] <- matrix(theta[[j]], ncol = num_states, byrow = TRUE)
@@ -315,6 +345,7 @@ gam_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
 #' @return Histograms of the data with overlayed distributions and confidence
 #'   intervals.
 #' @export
+#' @import RColorBrewer
 #' @importFrom stats dgamma
 #' @importFrom ggplot2 ggplot geom_histogram aes theme_bw geom_ribbon geom_line
 #'   ggtitle theme labs
@@ -343,8 +374,9 @@ gam_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
         ggplot2::geom_histogram(data = subvar_data,
                                 aes(x = Observation),
                                 binwidth = width,
-                                colour = "cornsilk4",
+                                colour = "grey",
                                 fill = "white") +
+        ggplot2::scale_color_brewer(palette = "Set1") +
         ggplot2::theme_bw() +
         ggplot2::ggtitle(Sub[i]) +
         ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
@@ -369,18 +401,20 @@ gam_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
       }
       h  <- h + labs(color = "State")
       df <- data.frame('xfit' = xfit, 'yfit' = marginal)
-      h  <- h + geom_line(data = df, aes(xfit, yfit), col="black", lwd=0.7)
+      h  <- h + geom_line(data = df, aes(xfit, yfit), col = "black", lwd = 0.7)
 
       for (k in 1:num_states){
         upper <- conf_intervals[[i]][[j]]$upper[k, ]*
           sum(subvar_data$State == k)*width
         lower <- conf_intervals[[i]][[j]]$lower[k, ]*
           sum(subvar_data$State == k)*width
-        df    <- data.frame('x' = conf_intervals[[i]][[j]]$range,
+        df <- data.frame('x' = conf_intervals[[i]][[j]]$range,
                             'upper' = upper, 'lower' = lower)
-        h     <- h + ggplot2::geom_ribbon(data = df, aes(x = x, ymin = lower,
-                                                         ymax = upper),
-                                          fill = (k + 1), alpha = 0.4)
+        h <- h + ggplot2::geom_ribbon(data = df,
+                                      aes(x = x, ymin = lower, ymax = upper),
+                                      alpha = 0.4,
+                                      fill = c(RColorBrewer::brewer.pal(n = 8,
+                                                          name = "Set1"))[k])
       }
       plots <- c(plots, list(h))
     }

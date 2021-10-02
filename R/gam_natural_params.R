@@ -20,31 +20,19 @@
 gam_natural_params <- function(num_states, num_variables, num_subjects,
                                num_covariates, working_params,
                                state_dep_dist_pooled = FALSE) {
-  ns             <- num_subjects
-  alpha_start    <- 1
-  alpha_end      <- num_states*num_variables*num_subjects
-  theta_end      <- alpha_end + num_states*num_variables*num_subjects
-  alpha_len      <- theta_len <- num_subjects*num_states
-  if (state_dep_dist_pooled) {
-    alpha_end    <- num_states*num_variables
-    theta_end    <- alpha_end + num_states*num_variables
-    alpha_len    <- theta_len <- num_states
-  }
-  theta_start <- alpha_end + 1
-  beta_start  <- theta_end + 1
-  beta_end    <- theta_end + (num_states^2 - num_states)*(num_covariates + 1)
-  delta_start <- beta_end + 1
-  delta_end   <- length(working_params)
 
-  alpha    <- split_vec(working_params, alpha_start, alpha_end, alpha_len,
-                        exp = TRUE)
-  theta <- split_vec(working_params, theta_start, theta_end, theta_len,
-                     exp = TRUE)
+  ind <- gam_working_ind(num_states, num_variables, num_subjects,
+                         num_covariates, state_dep_dist_pooled = FALSE)
+
+  alpha <- split_vec(working_params, ind$alpha_start, ind$alpha_end,
+                     ind$alpha_len, exp = TRUE)
+  theta <- split_vec(working_params, ind$theta_start, ind$theta_end,
+                     ind$theta_len, exp = TRUE)
   for (j in 1:num_variables) {
-    alpha[[j]]    <- matrix(alpha[[j]], ncol = num_states, byrow = TRUE)
+    alpha[[j]] <- matrix(alpha[[j]], ncol = num_states, byrow = TRUE)
     theta[[j]] <- matrix(theta[[j]], ncol = num_states, byrow = TRUE)
   }
-  beta <- matrix(working_params[beta_start:beta_end],
+  beta <- matrix(working_params[ind$beta_start:ind$beta_end],
                  nrow = num_states^2 - num_states)
   delta <- list()
   if (num_states == 1) {
@@ -53,7 +41,7 @@ gam_natural_params <- function(num_states, num_variables, num_subjects,
       return(list(alpha = alpha, theta = theta, gamma = gamma, delta = delta))
     }
   }
-  d <- split_vec(working_params, delta_start, delta_end, num_states - 1)
+  d <- split_vec(working_params, ind$delta_start, ind$delta_end, num_states - 1)
   for (i in 1:num_subjects) {
     foo        <- c(1, exp(d[[i]]))
     delta[[i]] <- foo/sum(foo)

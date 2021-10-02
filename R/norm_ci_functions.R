@@ -342,6 +342,7 @@ norm_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
 #' @return Histograms of the data with overlayed distributions and confidence
 #'   intervals.
 #' @export
+#' @import RColorBrewer
 #' @importFrom stats dnorm
 #' @importFrom ggplot2 ggplot geom_histogram aes theme_bw geom_ribbon geom_line
 #'   ggtitle theme labs
@@ -372,6 +373,7 @@ norm_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
                                 binwidth = width,
                                 colour = "grey",
                                 fill = "white") +
+        ggplot2::scale_color_brewer(palette = "Set1") +
         ggplot2::theme_bw() +
         ggplot2::ggtitle(Sub[i]) +
         ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
@@ -395,7 +397,7 @@ norm_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
       }
       h  <- h + labs(color = "State")
       df <- data.frame('xfit' = xfit, 'yfit' = marginal)
-      h  <- h + geom_line(data = df, aes(xfit, yfit), col="black", lwd=0.7)
+      h  <- h + geom_line(data = df, aes(xfit, yfit), col = "black", lwd = 0.7)
 
       for (k in 1:num_states){
         upper <- conf_intervals[[i]][[j]]$upper[k, ]*
@@ -406,7 +408,9 @@ norm_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
                          'upper' = upper, 'lower' = lower)
         h <- h + ggplot2::geom_ribbon(data = df,
                                       aes(x = x, ymin = lower, ymax = upper),
-                                      fill = (k + 1), alpha = 0.4)
+                                      alpha = 0.4,
+                                      fill = c(brewer.pal(n = 8,
+                                                          name = "Set1"))[k])
       }
       plots <- c(plots, list(h))
     }

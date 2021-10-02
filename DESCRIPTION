@@ -24,7 +24,8 @@ Imports:
     egg,
     ggplot2,
     stats,
-    Rcpp
+    Rcpp,
+    RColorBrewer
 URL: https://github.com/simonecollier/lizardHMM
 BugReports: https://github.com/simonecollier/lizardHMM/issues
 LinkingTo: 
