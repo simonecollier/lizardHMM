@@ -47,7 +47,7 @@ gam0_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                          num_covariates,
                          alpha0, theta0, zweight0, beta0, delta0,
                          state_dep_dist_pooled = FALSE, iterlim = 100,
-                         hessian = FALSE) {
+                         hessian = FALSE, print.level = 0) {
   num_time <- nrow(x)
   working_params <- gam0_working_params(num_states, num_variables, num_subjects,
                                         alpha0, theta0, zweight0, beta0, delta0)
@@ -62,7 +62,7 @@ gam0_fit_hmm <- function(x, design, num_states, num_variables, num_subjects,
                       state_dep_dist_pooled = state_dep_dist_pooled,
                       iterlim = iterlim,
                       hessian = hessian,
-                      print.level = 2)
+                      print.level = print.level)
   pn    <- gam0_natural_params(num_states = num_states,
                                num_variables = num_variables,
                                num_subjects = num_subjects,

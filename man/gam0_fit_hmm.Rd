@@ -18,7 +18,8 @@ gam0_fit_hmm(
   delta0,
   state_dep_dist_pooled = FALSE,
   iterlim = 100,
-  hessian = FALSE
+  hessian = FALSE,
+  print.level = 0
 )
 }
 \arguments{

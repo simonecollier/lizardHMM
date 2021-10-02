@@ -26,7 +26,7 @@ split_vec <- function(vector, start, end, length, exp = FALSE, tanh = FALSE) {
                  ceiling(seq_along(exp(vector[start:end]))/length)))
   }
   if (tanh) {
-    return(split(tanh(vector[start:end]),
+    return(split((tanh(vector[start:end]) + 1)/2,
                  ceiling(seq_along(exp(vector[start:end]))/length)))
   }
   split(vector[start:end], ceiling(seq_along(vector[start:end])/length))

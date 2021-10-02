@@ -34,7 +34,7 @@ gam0_working_params <- function(num_states, num_variables, num_subjects,
   if (num_states == 1) {
     return(talpha, ttheta)
   }
-  tzweight <- atanh(unlist(zweight))
+  tzweight <- atanh(2*unlist(zweight) - 1)
   tbeta    <- as.vector(beta)
   tdelta   <- numeric()
   for (i in 1:num_subjects) {
