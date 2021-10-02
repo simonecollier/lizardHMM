@@ -49,4 +49,3 @@ norm_loglikelihood <- function(working_params, x, design,
   }
   - cum_loglikelihood
 }
-
