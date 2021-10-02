@@ -31,11 +31,14 @@ gam0_allprobs <- function(num_states, num_variables, num_subjects, num_time,
     for (t in 1:num_time) {
       P     <- rep(1, num_states)
       for (j in 1:num_variables) {
+        means   <- pn$alpha[[j]][s_ind, ]*pn$theta[[j]]
+        min_ind <- which(means == min(means))
         if (!is.na(x[t, j, i])) {
           if (x[t, j, i] == 0) {
-            P <- P*c(pn$zweight[[j]][s_ind], stats::dgamma(x[t, j, i],
-                                    shape = pn$alpha[[j]][s_ind, 2:num_states],
-                                    scale = pn$theta[[j]][s_ind, 2:num_states]))
+            P_vec          <- numeric(num_states)
+            P_vec[min_ind] <- pn$zweight[[j]][s_ind]
+            P              <- P*P_vec
+            #P <- P*c(pn$zweight[[j]][s_ind], rep(0, num_states - 1))
           } else {
             P <- P*stats::dgamma(x[t, j, i], shape = pn$alpha[[j]][s_ind, ],
                                  scale = pn$theta[[j]][s_ind, ])*
