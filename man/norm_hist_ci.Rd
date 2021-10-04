@@ -12,6 +12,8 @@ norm_hist_ci(
   num_variables,
   hmm,
   state_dep_dist_pooled = FALSE,
+  variable_names = c("Var 1", "Var 2", "Var 3"),
+  subject_names = c("Subject 1", "Subject 2", "Subject 3", "Subject 4"),
   width = 1,
   n = 100,
   level = 0.975,
@@ -40,6 +42,12 @@ the subject in the corresponding column.}
 \item{state_dep_dist_pooled}{A logical variable indicating whether the
 state dependent distribution parameters \code{mu} and \code{sigma} should be
 treated as equal for all subjects.}
+
+\item{variable_names}{A vector containing the names of the variables in the
+data \code{x}.}
+
+\item{subject_names}{A vector containing the names of the subjects generating
+the data \code{x}.}
 
 \item{width}{The width of the histogram bins.}
 

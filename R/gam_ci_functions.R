@@ -305,6 +305,9 @@ gam_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
                                   na.rm = TRUE)
         }
       }
+      range[!is.finite(range)] <- NA
+      upper[!is.finite(upper)] <- NA
+      lower[!is.finite(lower)] <- NA
       conf_intervals[[i]][[j]] <- list(range = range,
                                        upper = upper,
                                        lower = lower)
@@ -335,6 +338,10 @@ gam_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
 #' @param state_dep_dist_pooled A logical variable indiacting whether the
 #'   state dependent distribution parameters `alpha` and `theta` should be
 #'   treated as equal for all subjects.
+#' @param variable_names A vector containing the names of the variables in the
+#'   data `x`.
+#' @param subject_names A vector containing the names of the subjects generating
+#'   the data `x`.
 #' @param width The width of the histogram bins.
 #' @param n The number of samples in the Monte Carlo fitting.
 #' @param level A number indicating the level of confidence for the desired
@@ -351,6 +358,9 @@ gam_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
 #'   ggtitle theme labs
 gam_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
                         hmm, state_dep_dist_pooled = FALSE,
+                        variable_names = c("Var 1", "Var 2", "Var 3"),
+                        subject_names = c("Subject 1", "Subject 2",
+                                          "Subject 3", "Subject 4"),
                         width = 1, n = 100, level = 0.975, x_step = 0.2) {
 
   sample         <- gam_ci(hmm, state_dep_dist_pooled, n,
@@ -358,9 +368,6 @@ gam_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
   conf_intervals <- gam_dist_ci_data(x, num_states, num_variables,
                                      num_subjects, sample,
                                      state_dep_dist_pooled, x_step, n, level)
-  n     <- nrow(x)
-  Var   <- c("Variable 1", "Variable 2", "Variable 3", "Variable 4")
-  Sub   <- c("Subject 1", "Subject 2", "Subject 3", "Subject 4")
   plots <- list()
   for (i in 1:num_subjects) {
     subvar_data <- data.frame('State' = as.factor(viterbi[, i]))
@@ -378,11 +385,11 @@ gam_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
                                 fill = "white") +
         ggplot2::scale_color_brewer(palette = "Set1") +
         ggplot2::theme_bw() +
-        ggplot2::ggtitle(Sub[i]) +
+        ggplot2::ggtitle(subject_names[i]) +
         ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
                        panel.grid.minor = ggplot2::element_blank(),
                        plot.title = ggplot2::element_text(hjust = 0.5)) +
-        ggplot2::labs(x = Var[j], y = '')
+        ggplot2::labs(x = variable_names[j], y = '')
 
       xfit <- seq(min(subvar_data$Observation, na.rm = TRUE),
                   max(subvar_data$Observation, na.rm = TRUE),
