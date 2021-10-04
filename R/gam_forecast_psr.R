@@ -1,4 +1,4 @@
-#' Compute forecast gamma pseuso-residuals
+#' Compute forecast gamma pseudo-residuals
 #'
 #' This function computes the gamma forecast pseudo-residuals of the data `x`
 #'   fitted with `hmm` (with gamma state dependent distributions).
@@ -9,7 +9,7 @@
 #' @param hmm A list of parameters that specify the gamma HMM, including
 #'   `num_states`, `num_variables`, `num_subjects`, `alpha`, `theta`, `gamma`,
 #'   `delta`.
-#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#' @param state_dep_dist_pooled A logical variable indicating whether the
 #'   state dependent distribution parameters `alpha` and `theta` should be
 #'   treated as equal for all subjects.
 #'
@@ -29,7 +29,7 @@ gam_forecast_psr <- function(x, hmm, state_dep_dist_pooled = FALSE) {
     }
     pstepmat          <- matrix(NA, num_time, num_states)
     forecast_psr[[i]] <- rep(NA, num_time)
-    ind_step          <- 1:n
+    ind_step          <- 1:num_time
     for (j in 1:num_variables) {
       ind_step <- sort(intersect(ind_step, which(!is.na(x[, j, i]))))
     }

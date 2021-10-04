@@ -2,7 +2,7 @@
 % Please edit documentation in R/norm_forecast_psr.R
 \name{norm_forecast_psr}
 \alias{norm_forecast_psr}
-\title{Compute forecast normal pseuso-residuals}
+\title{Compute forecast normal pseudo-residuals}
 \usage{
 norm_forecast_psr(x, hmm, state_dep_dist_pooled = FALSE)
 }
@@ -15,7 +15,7 @@ variable number, and the third (matrix number) to the subject number.}
 \code{num_states}, \code{num_variables}, \code{num_subjects}, \code{mu}, \code{sigma}, \code{gamma},
 \code{delta}.}
 
-\item{state_dep_dist_pooled}{A logical variable indiacting whether the
+\item{state_dep_dist_pooled}{A logical variable indicating whether the
 state dependent distribution parameters \code{mu} and \code{sigma} should be
 treated as equal for all subjects.}
 }

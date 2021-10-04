@@ -2,7 +2,7 @@
 % Please edit documentation in R/gam_forecast_psr.R
 \name{gam_forecast_psr}
 \alias{gam_forecast_psr}
-\title{Compute forecast gamma pseuso-residuals}
+\title{Compute forecast gamma pseudo-residuals}
 \usage{
 gam_forecast_psr(x, hmm, state_dep_dist_pooled = FALSE)
 }
@@ -15,7 +15,7 @@ variable number, and the third (matrix number) to the subject number.}
 \code{num_states}, \code{num_variables}, \code{num_subjects}, \code{alpha}, \code{theta}, \code{gamma},
 \code{delta}.}
 
-\item{state_dep_dist_pooled}{A logical variable indiacting whether the
+\item{state_dep_dist_pooled}{A logical variable indicating whether the
 state dependent distribution parameters \code{alpha} and \code{theta} should be
 treated as equal for all subjects.}
 }

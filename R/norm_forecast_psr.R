@@ -1,4 +1,4 @@
-#' Compute forecast normal pseuso-residuals
+#' Compute forecast normal pseudo-residuals
 #'
 #' This function computes the normal forecast pseudo-residuals of the data `x`
 #'   fitted with `hmm` (with normal state dependent distributions).
@@ -9,7 +9,7 @@
 #' @param hmm A list of parameters that specify the normal HMM, including
 #'   `num_states`, `num_variables`, `num_subjects`, `mu`, `sigma`, `gamma`,
 #'   `delta`.
-#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#' @param state_dep_dist_pooled A logical variable indicating whether the
 #'   state dependent distribution parameters `mu` and `sigma` should be
 #'   treated as equal for all subjects.
 #'
