@@ -33,7 +33,9 @@ data \code{x}.}
 \item{subject_names}{A vector containing the names of the subjects generating
 the data \code{x}.}
 
-\item{length}{A number indicating the desired length of the timeseries plot.}
+\item{start}{A number indicating the desired x-axis minimum.}
+
+\item{end}{A number indicating the desired x-axis maximum}
 }
 \value{
 A grid of plots of the time series for each subject and variable.
