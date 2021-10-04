@@ -15,15 +15,22 @@
 #'
 #' @return A list of matrices (one for each subject) of the forward variables.
 #' @export
-gam_logforward <- function(x, hmm, state_dep_dist_pooled = FALSE) {
+gam_logforward <- function(x, hmm, state_dep_dist_pooled = FALSE,
+                           zero_inflated = FALSE) {
   num_time      <- nrow(x)
   num_states    <- hmm$num_states
   num_variables <- hmm$num_variables
   num_subjects  <- hmm$num_subjects
   la            <- list()
-  allprobs      <- gam_allprobs(num_states, num_variables,
-                                 num_subjects, num_time,
-                                 x, hmm, state_dep_dist_pooled = FALSE)
+  if (zero_inflated) {
+    allprobs      <- gam0_allprobs(num_states, num_variables,
+                                   num_subjects, num_time,
+                                   x, hmm, state_dep_dist_pooled = FALSE)
+  } else {
+    allprobs      <- gam_allprobs(num_states, num_variables,
+                                  num_subjects, num_time,
+                                  x, hmm, state_dep_dist_pooled = FALSE)
+  }
   for (i in 1:num_subjects) {
     la[[i]] <- matrix(NA, nrow = num_states, ncol = num_time)
 

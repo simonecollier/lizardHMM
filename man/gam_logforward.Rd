@@ -4,7 +4,7 @@
 \alias{gam_logforward}
 \title{Compute log forward probabilities}
 \usage{
-gam_logforward(x, hmm, state_dep_dist_pooled = FALSE)
+gam_logforward(x, hmm, state_dep_dist_pooled = FALSE, zero_inflated = FALSE)
 }
 \arguments{
 \item{x}{The data to be fit with an HMM in the form of a 3D array. The
