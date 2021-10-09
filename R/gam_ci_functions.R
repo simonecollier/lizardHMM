@@ -282,7 +282,7 @@ gam_dist_ci_data <- function(x, num_states, num_variables, num_subjects,
     }
     for (j in 1:num_variables) {
       range       <- seq(min(x[, j, i], na.rm = TRUE),
-                         max(x[, j, i], na.rm = TRUE), length.out = 100)
+                         max(x[, j, i], na.rm = TRUE), length.out = 2000)
       xc          <- length(range)
       density.lst <- list()
       for (k in 1:num_states) {

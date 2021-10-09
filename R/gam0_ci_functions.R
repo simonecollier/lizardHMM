@@ -347,10 +347,19 @@ gam0_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
       # (could mess up if multiple variables)
       xfit <- seq(0, max(subvar_data0$Observation, na.rm = TRUE), by = x_step)
       marginal <- numeric(length(xfit))
+      # The commented section is if we include the weighting for the gamma
+      # distributions... but it seems to fit worse
+      # means   <- hmm$alpha[[j]][s_ind, ]*hmm$theta[[j]]
+      # min_ind <- which(means == min(means))
       for (k in 1:num_states) {
         yfit     <- dgamma(xfit, shape = hmm$alpha[[j]][s_ind, k],
                            scale = hmm$theta[[j]][s_ind, k])
         yfit     <- yfit * sum(subvar_data0$State == k) * width
+        # The commented section is if we include the weighting for the gamma
+        # distributions... but it seems to fit worse
+        # if (k == min_ind) {
+        #   yfit   <- yfit * (1 - hmm$zweight[[j]][s_ind])
+        # }
         df       <- data.frame('xfit' = xfit, 'yfit' = yfit,
                                col = as.factor(rep(k, length(xfit))))
         h        <- h + ggplot2::geom_line(data = df,
@@ -363,10 +372,16 @@ gam0_hist_ci <- function(x, viterbi, num_states, num_subjects, num_variables,
       h  <- h + geom_line(data = df, aes(xfit, yfit), col = "black", lwd = 0.7)
 
       for (k in 1:num_states){
-        upper <- conf_intervals[[i]][[j]]$upper[k, ]*
-          sum(subvar_data0$State == k)*width
-        lower <- conf_intervals[[i]][[j]]$lower[k, ]*
-          sum(subvar_data0$State == k)*width
+        upper <- conf_intervals[[i]][[j]]$upper[k, ] *
+          sum(subvar_data0$State == k) * width
+        lower <- conf_intervals[[i]][[j]]$lower[k, ] *
+          sum(subvar_data0$State == k) * width
+        # The commented section is if we include the weighting for the gamma
+        # distributions... but it seems to fit worse
+        # if (k == min_ind) {
+        #   upper <- upper * (1 - hmm$zweight[[j]][s_ind])
+        #   lower <- lower * (1 - hmm$zweight[[j]][s_ind])
+        # }
         df <- data.frame('x' = conf_intervals[[i]][[j]]$range,
                          'upper' = upper, 'lower' = lower)
         h <- h + ggplot2::geom_ribbon(data = df,
