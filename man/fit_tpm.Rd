@@ -29,6 +29,6 @@ probability matrices at each time step.
 }
 \description{
 This function computes the time dependent transition probability matrix
-from the corresponding vector \code{design_vec} and the matrix of regression
+from the corresponding vector \code{design} and the matrix of regression
 coefficients \code{beta}.
 }

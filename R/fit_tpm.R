@@ -1,7 +1,7 @@
 #' Compute transition probability matrices
 #'
 #' This function computes the time dependent transition probability matrix
-#' from the corresponding vector `design_vec` and the matrix of regression
+#' from the corresponding vector `design` and the matrix of regression
 #' coefficients `beta`.
 #'
 #' @param num_states The number of states in the desired HMM.

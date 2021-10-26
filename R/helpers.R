@@ -51,3 +51,6 @@ euclidean_distance <- function(x_positions, y_positions) {
   }
   euclidean
 }
+
+
+
