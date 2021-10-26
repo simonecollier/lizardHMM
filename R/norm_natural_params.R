@@ -11,11 +11,11 @@
 #'   transition probability matrix depends on.
 #' @param working_params A vector of the working normal parameters for the
 #'   HMM as outputted by `norm_working_params()`.
-#' @param state_dep_dist_pooled A logical variable indiacting whether the
+#' @param state_dep_dist_pooled A logical variable indicating whether the
 #'   state dependent distribution parameters `mu` and `sigma` should be
 #'   treated as equal for all subjects.
 #'
-#' @return A list of the natural paramters.
+#' @return A list of the natural parameters.
 #' @export
 #' @examples
 #' ### 1. Get the working parameters
