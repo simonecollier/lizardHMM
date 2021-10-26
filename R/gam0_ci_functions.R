@@ -295,6 +295,10 @@ gam0_ci <- function(hmm, state_dep_dist_pooled = FALSE, n = 100, level= 0.975,
 #'   interval.
 #' @param x_step A value indicating the step length for the range of
 #'   observation values.
+#' @param xaxis A list containing a list for each subject containing vectors for
+#'   each variable of the desired minimum and maximum x-axis value.
+#' @param yaxis A list containing a list for each subject containing vectors for
+#'   each variable of the desired minimum and maximum y-axis value.
 #'
 #' @return Histograms of the data with overlayed distributions and confidence
 #'   intervals.

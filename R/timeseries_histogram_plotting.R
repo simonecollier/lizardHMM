@@ -11,8 +11,10 @@
 #'   data `x`.
 #' @param subject_names A vector containing the names of the subjects generating
 #'   the data `x`.
-#' @param start A number indicating the desired x-axis minimum.
-#' @param end A number indicating the desired x-axis maximum
+#' @param xaxis A list containing a list for each subject containing vectors for
+#'   each variable of the desired minimum and maximum x-axis value.
+#' @param yaxis A list containing a list for each subject containing vectors for
+#'   each variable of the desired minimum and maximum y-axis value.
 #'
 #' @return A grid of plots of the time series for each subject and variable.
 #' @export
@@ -23,13 +25,13 @@ timeseries_plot <- function(x, states, num_subjects, num_variables,
                             variable_names = c("Var 1", "Var 2", "Var 3"),
                             subject_names = c("Subject 1", "Subject 2",
                                               "Subject 3", "Subject 4"),
-                            start = 1, end = 300) {
+                            xaxis = list(list(c(1,900))), yaxis = NULL) {
   plots  <- list()
   for (i in 1:num_subjects) {
-    data       <- data.frame('State' = as.factor(states[start:end, i]))
-    data$Time  <- start:end
+    data       <- data.frame('State' = as.factor(states[, i]))
+    data$Time  <- 1:nrow(states)
     for (j in 1:num_variables) {
-      data$Observation <- x[start:end, j, i]
+      data$Observation <- x[, j, i]
       p <- ggplot(data, ggplot2::aes(x = Time, y = Observation)) +
         ggplot2::theme_light() +
         ggplot2::scale_color_brewer(palette = "Set1") +
@@ -37,7 +39,8 @@ timeseries_plot <- function(x, states, num_subjects, num_variables,
         theme(plot.title = ggplot2::element_text(hjust = 0.5)) +
         labs(x = 'Time (s)', y = variable_names[j]) +
         geom_point(ggplot2::aes(color = State)) +
-        geom_line(colour = 'grey', alpha = 0.8, lwd = 0.4)
+        geom_line(colour = 'grey', alpha = 0.8, lwd = 0.4) +
+        ggplot2::coord_cartesian(xlim = xaxis[[i]][[j]], ylim = yaxis[[i]][[j]])
       plots <- c(plots, list(p))
     }
   }

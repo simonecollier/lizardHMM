@@ -60,6 +60,12 @@ interval.}
 
 \item{x_step}{A value indicating the step length for the range of
 observation values.}
+
+\item{xaxis}{A list containing a list for each subject containing vectors for
+each variable of the desired minimum and maximum x-axis value.}
+
+\item{yaxis}{A list containing a list for each subject containing vectors for
+each variable of the desired minimum and maximum y-axis value.}
 }
 \value{
 Histograms of the data with overlayed distributions and confidence

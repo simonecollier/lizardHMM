@@ -11,8 +11,8 @@ timeseries_plot(
   num_variables,
   variable_names = c("Var 1", "Var 2", "Var 3"),
   subject_names = c("Subject 1", "Subject 2", "Subject 3", "Subject 4"),
-  start = 1,
-  end = 300
+  xaxis = list(list(c(1, 900))),
+  yaxis = NULL
 )
 }
 \arguments{
@@ -33,9 +33,11 @@ data \code{x}.}
 \item{subject_names}{A vector containing the names of the subjects generating
 the data \code{x}.}
 
-\item{start}{A number indicating the desired x-axis minimum.}
+\item{xaxis}{A list containing a list for each subject containing vectors for
+each variable of the desired minimum and maximum x-axis value.}
 
-\item{end}{A number indicating the desired x-axis maximum}
+\item{yaxis}{A list containing a list for each subject containing vectors for
+each variable of the desired minimum and maximum y-axis value.}
 }
 \value{
 A grid of plots of the time series for each subject and variable.
