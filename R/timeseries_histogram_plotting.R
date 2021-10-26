@@ -113,3 +113,109 @@ norm_hist <- function(sample, num_states, num_variables, num_subjects,
   plots
   #ggarrange(plotlist = plots, common.legend = TRUE, legend = "bottom")
 }
+
+
+
+#' Plot histograms
+#' @return Histograms of the data with the distributions overlayed.
+#' @export
+#' @importFrom ggplot2 ggplot aes ggtitle theme_bw labs geom_line
+#' @importFrom stats dnorm
+
+gam0_hist_viterbi <- function(x, viterbi, num_states, num_subjects,
+                              num_variables, hmm, state_dep_dist_pooled = FALSE,
+                              width = 1, n = 100, level = 0.975, x_step = 0.2) {
+  n     <- nrow(x)
+  Var   <- c("Variable 1", "Variable 2", "Variable 3", "Variable 4")
+  Sub   <- c("Subject 1", "Subject 2", "Subject 3", "Subject 4")
+  plots <- list()
+  for (i in 1:num_subjects) {
+
+    subvar_data <- data.frame('State' = as.factor(viterbi[, i]))
+
+    s_ind   <- i
+
+    if (state_dep_dist_pooled) {
+
+      s_ind <- 1
+
+    }
+    for (j in 1:num_variables) {
+      subvar_data$Observation <- x[, j, i]
+      h <- ggplot2::ggplot() +
+
+      ggplot2::geom_histogram(data = subvar_data,
+                              aes(x = Observation),
+                              binwidth = width,
+                              colour = "cornsilk4",
+                              fill = "white") +
+
+
+      ggplot2::theme_bw() +
+      ggplot2::xlim(0.0000001, 4) +
+
+      ggplot2::ggtitle(Sub[i]) +
+
+      ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
+                     panel.grid.minor = ggplot2::element_blank(),
+                     plot.title = ggplot2::element_text(hjust = 0.5)) +
+
+      ggplot2::labs(x = Var[j], y = '')
+      xfit <- seq(min(subvar_data$Observation, na.rm = TRUE),
+                  max(subvar_data$Observation, na.rm = TRUE),
+                  by = x_step)
+      yfit <- c(hmm$zweight[[j]][i], dgamma(xfit[2:length(xfit)],
+                                            shape = hmm$alpha[[j]][s_ind, 1],
+                                            scale = hmm$theta[[j]][s_ind, 1])*
+
+                (1 - hmm$zweight[[j]][i]))
+      yfit <- yfit * sum(subvar_data$State == 1) * width
+      df   <- data.frame('xfit' = xfit, 'yfit' = yfit,
+                         col = as.factor(rep(1, length(xfit))))
+      h    <- h + ggplot2::geom_line(data = df,
+                                     aes(xfit, yfit, colour = col),
+                                     lwd = 0.7)
+      marginal <- yfit
+      for (k in 2:num_states) {
+
+        yfit     <- dgamma(xfit, shape = hmm$alpha[[j]][s_ind, k],
+
+                           scale = hmm$theta[[j]][s_ind, k])
+
+        yfit     <- yfit * sum(subvar_data$State == k) * width
+
+        df       <- data.frame('xfit' = xfit, 'yfit' = yfit,
+
+                               col = as.factor(rep(k, length(xfit))))
+
+        h        <- h + ggplot2::geom_line(data = df,
+                                           aes(xfit, yfit, colour = col),
+
+                                           lwd = 0.7)
+
+
+        marginal <- marginal + yfit
+
+
+      }
+
+
+      h  <- h + labs(color = "State")
+
+
+      df <- data.frame('xfit' = xfit, 'yfit' = marginal)
+
+
+      h  <- h + geom_line(data = df, aes(xfit, yfit), col="black", lwd=0.7)
+
+      plots <- c(plots, list(h))
+
+
+    }
+
+
+  }
+
+  list(plots = plots, xfit = xfit, marginal = marginal)
+
+}
