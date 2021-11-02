@@ -102,14 +102,14 @@ gam0_natural_vec <- function(num_states, num_variables, num_subjects,
 #' @param num_covariates The number of covariates in the data that the
 #'   transition probability depends on.
 #' @param estimate_vec A vector containing the estimated natural parameters
-#'   of the gamma HMM in the format outputte by `gam_natural_vec()`.
+#'   of the gamma HMM in the format outputted by `gam_natural_vec()`.
 #' @param upper_vec A vector containing the upper confidence interval of the
-#'   estimated natural parameters of the gamma HMM in the format outputte by
+#'   estimated natural parameters of the gamma HMM in the format outputted by
 #'   `gam_natural_vec()`.
 #' @param lower_vec A vector containing the lower confidence interval of the
-#'   estimated natural parameters of the gamma HMM in the format outputte by
+#'   estimated natural parameters of the gamma HMM in the format outputted by
 #'   `gam_natural_vec()`.
-#'@param state_dep_dist_pooled A logical variable indiacting whether the
+#'@param state_dep_dist_pooled A logical variable indicating whether the
 #'   state dependent distribution parameters `alpha` and `theta` should be
 #'   treated as equal for all subjects.
 #'

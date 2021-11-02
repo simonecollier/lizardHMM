@@ -7,7 +7,7 @@
 plot_tpm_entries(
   num_states,
   covar_vec,
-  tpm_entry_list,
+  cov_ci,
   covariate_name = "Temp - mean(Temp)"
 )
 }

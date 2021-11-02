@@ -2,13 +2,15 @@
 #'
 #' This function computes the transition probability matrix entries with their
 #' confidence intervals for different covariate values in order to plot how
-#' they change.
+#' they change. THIS FUNCTION DOES NOT SUPPORT UNPOOLED TRANSITION PROBABILITY
+#' MATRICES.
 #'
 #' @param num_states The number of states in the desired HMM.
 #' @param num_subjects The number of subjects/trials that generated the data.
 #' @param num_covariates The number of covariates in the data that the
 #'   transition probability matrix depends on.
-#' @param num_time A value indicating the length of the data.
+#' @param len_covariates A value indicating how many covariate values will be
+#'   used.
 #' @param design A list of design matrices, one for each subject which
 #'   indicate the values of the each of the covariates (column) at each point
 #'   in time (row).
@@ -20,25 +22,31 @@
 #'   confidence interval, with the rows of the matrices containing the entries
 #'   of the transition probability matrices at each covariate value.
 #' @export
-tpm_entries <- function(num_states, num_subjects, num_covariates, num_time,
-                        design, conf_intervals) {
-  estimate <- fit_tpm(num_states, num_subjects, num_covariates, num_time,
-                      conf_intervals$beta$estimate, design)
-  estimate_entries <- matrix(unlist(estimate), ncol = num_states*num_states,
-                             byrow = TRUE)
-  #lower <- fit_tpm(num_states, num_subjects, num_covariates, num_time,
-  #                 conf_intervals$beta$lower, design)
-  #lower_entries <- matrix(unlist(lower), ncol = num_states*num_states,
-  #                        byrow = TRUE)
-  #upper <- fit_tpm(num_states, num_subjects, num_covariates, num_time,
-  #                 conf_intervals$beta$upper, design)
-  #upper_entries <- matrix(unlist(upper), ncol = num_states*num_states,
-  #                        byrow = TRUE)
-  delta_list <- list()
-  for (i in num_subjects) {
-    delta_list[[i]] <- matrix(0, ncol = num_states, nrow = num_time)
-    for (t in 1:num_time){
-      eigs <- eigen(t(estimate[[i]][, , t]))
+covariate_ci <- function(hmm, len_covariates, design, n = 100, level = 0.975,
+                         state_dep_dist_pooled = FALSE) {
+
+  inds <- gam0_working_ind(hmm$num_states, hmm$num_variables, hmm$num_subjects,
+                           hmm$num_covariates, state_dep_dist_pooled)
+  beta_sd       <- sqrt(diag(hmm$inverse_hessian))[inds$beta_start:inds$beta_end]
+  beta_vec      <- hmm$working_params[inds$beta_start:inds$beta_end]
+  len           <- length(beta_sd)
+  beta_entries  <- matrix(0, ncol = len, nrow = n)
+  for (l in 1:n) {
+    sample            <- rnorm(len, mean = beta_vec, sd = beta_sd)
+    beta_entries[l, ] <- sample
+  }
+  gamma_entries <- list()
+  delta_entries <- list()
+  for (t in 1:len_covariates) {
+    gamma_entries[[t]] <- matrix(0, ncol = hmm$num_states*hmm$num_states,
+                                 nrow = n)
+    delta_entries[[t]] <- matrix(0, ncol = hmm$num_states, nrow = n)
+    for (l in 1:n) {
+      beta <- matrix(beta_entries[l, ], nrow = num_states^2 - num_states)
+      gamma <- fit_tpm(hmm$num_states, hmm$num_subjects, hmm$num_covariates,
+                       1, beta, list(matrix(design[[1]][t, ], nrow = 1)))
+      gamma_entries[[t]][l, ] <- unlist(gamma)
+      eigs <- eigen(x = t(gamma[[1]][, , 1]))
       values <- numeric()
       for (value in eigs$value) {
         if (zapsmall(Im(value)) == 0) {
@@ -48,16 +56,56 @@ tpm_entries <- function(num_states, num_subjects, num_covariates, num_time,
         }
       }
       ind <- which(values == 1)
-      d <- eigs$vectors[, ind]/sum(eigs$vectors[, ind])
-      delta_list[[i]][t, ] <- eigs$vectors[, ind]/sum(eigs$vectors[, ind])
-      #return(list(d, d %*% estimate[[i]][, , t]))
+      delta_entries[[t]][l, ] <- Re(eigs$vectors[, ind]/sum(eigs$vectors[, ind]))
     }
   }
-  delta_entries = matrix(unlist(delta_list), ncol = num_states, byrow = FALSE)
-  list(estimate_entries = estimate_entries,
-       delta_entries = delta_entries)
-       #lower_entries = lower_entries,
-       #upper_entries = upper_entries)
+  upper_gamma <- matrix(0, ncol = hmm$num_states*hmm$num_states,
+                        nrow = len_covariates)
+  lower_gamma <- matrix(0, ncol = hmm$num_states*hmm$num_states,
+                        nrow = len_covariates)
+  for (i in 1:(hmm$num_states*hmm$num_states)) {
+    for (t in 1:len_covariates) {
+      upper_gamma[t, i] <- quantile(gamma_entries[[t]][, i],
+                                    probs = level, na.rm = TRUE)
+      lower_gamma[t, i] <- quantile(gamma_entries[[t]][, i],
+                                    probs = 1 - level, na.rm = TRUE)
+    }
+  }
+  upper_delta <- matrix(0, ncol = hmm$num_states, nrow = len_covariates)
+  lower_delta <- matrix(0, ncol = hmm$num_states, nrow = len_covariates)
+  for (j in 1:num_states) {
+    for (t in 1:len_covariates) {
+      upper_delta[t, j] <- quantile(delta_entries[[t]][, j],
+                                    probs = level, na.rm = TRUE)
+      lower_delta[t, j] <- quantile(delta_entries[[t]][, j],
+                                    probs = 1 - level, na.rm = TRUE)
+    }
+  }
+  gamma <- fit_tpm(hmm$num_states, hmm$num_subjects, hmm$num_covariates,
+                   len_covariates, hmm$beta, design)
+  gamma_mat <- matrix(unlist(gamma), ncol = hmm$num_states*hmm$num_states,
+                             byrow = TRUE)
+  delta_mat <- matrix(0, ncol = hmm$num_states, nrow = len_covariates)
+  for (t in 1:len_covariates){
+    eigs <- eigen(t(gamma[[1]][, , t]))
+    values <- numeric()
+    for (value in eigs$value) {
+      if (zapsmall(Im(value)) == 0) {
+        values <- c(values, zapsmall(Re(value)))
+      } else {
+        values <- c(values, zapsmall(value))
+      }
+    }
+    ind <- which(values == 1)
+    delta_mat[t, ] <- Re(eigs$vectors[, ind]/sum(eigs$vectors[, ind]))
+  }
+
+  list(gammas = gamma_mat,
+       upper_gamma = upper_gamma,
+       lower_gamma = lower_gamma,
+       deltas = delta_mat,
+       upper_delta = upper_delta,
+       lower_delta = lower_delta)
 }
 
 
@@ -79,7 +127,7 @@ tpm_entries <- function(num_states, num_subjects, num_covariates, num_time,
 #' @export
 #' @import ggplot2
 #' @import latex2exp
-plot_tpm_entries <- function(num_states, covar_vec, tpm_entry_list,
+plot_tpm_entries <- function(num_states, covar_vec, cov_ci,
                              covariate_name = 'Temp - mean(Temp)') {
   plots <- list()
   if (num_states == 3) {
@@ -91,9 +139,9 @@ plot_tpm_entries <- function(num_states, covar_vec, tpm_entry_list,
   }
   for (i in 1:(num_states*num_states)) {
     df <- data.frame(Temperature = covar_vec,
-                     Estimate = tpm_entry_list$estimate_entries[, i])
-                     #Lower = tpm_entry_list$lower_entries[, i],
-                     #Upper = tpm_entry_list$upper_entries[, i])
+                     Estimate = cov_ci$gammas[, i],
+                     Lower = cov_ci$lower_gamma[, i],
+                     Upper = cov_ci$upper_gamma[, i])
     p <- ggplot(data = df, aes(x = Temperature , y = Estimate)) +
       geom_line() +
       ggtitle(entries[i]) +
@@ -101,8 +149,8 @@ plot_tpm_entries <- function(num_states, covar_vec, tpm_entry_list,
             axis.title.x = ggplot2::element_blank(),
             axis.title.y = ggplot2::element_blank())
       #labs(x = covariate_name, y = 'Probability')
-    #p  <- p + geom_ribbon(data = df, aes(x = Temperature, ymin = Lower,
-    #                                     ymax = Upper), alpha = 0.4)
+    p  <- p + geom_ribbon(data = df, aes(x = Temperature, ymin = Lower,
+                                         ymax = Upper), alpha = 0.4)
     plots <- c(plots, list(p))
   }
   plots

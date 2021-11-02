@@ -26,17 +26,17 @@ gam0_ci_data(
 transition probability depends on.}
 
 \item{estimate_vec}{A vector containing the estimated natural parameters
-of the gamma HMM in the format outputte by \code{gam_natural_vec()}.}
+of the gamma HMM in the format outputted by \code{gam_natural_vec()}.}
 
 \item{upper_vec}{A vector containing the upper confidence interval of the
-estimated natural parameters of the gamma HMM in the format outputte by
+estimated natural parameters of the gamma HMM in the format outputted by
 \code{gam_natural_vec()}.}
 
 \item{lower_vec}{A vector containing the lower confidence interval of the
-estimated natural parameters of the gamma HMM in the format outputte by
+estimated natural parameters of the gamma HMM in the format outputted by
 \code{gam_natural_vec()}.}
 
-\item{state_dep_dist_pooled}{A logical variable indiacting whether the
+\item{state_dep_dist_pooled}{A logical variable indicating whether the
 state dependent distribution parameters \code{alpha} and \code{theta} should be
 treated as equal for all subjects.}
 }
