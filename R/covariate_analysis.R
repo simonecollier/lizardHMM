@@ -42,7 +42,8 @@ covariate_ci <- function(hmm, len_covariates, design, n = 100, level = 0.975,
                                  nrow = n)
     delta_entries[[t]] <- matrix(0, ncol = hmm$num_states, nrow = n)
     for (l in 1:n) {
-      beta <- matrix(beta_entries[l, ], nrow = num_states^2 - num_states)
+      beta <- matrix(beta_entries[l, ],
+                     nrow = hmm$num_states^2 - hmm$num_states)
       gamma <- fit_tpm(hmm$num_states, hmm$num_subjects, hmm$num_covariates,
                        1, beta, list(matrix(design[[1]][t, ], nrow = 1)))
       gamma_entries[[t]][l, ] <- unlist(gamma)

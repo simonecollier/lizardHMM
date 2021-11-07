@@ -25,7 +25,8 @@ Imports:
     ggplot2,
     stats,
     Rcpp,
-    RColorBrewer
+    RColorBrewer,
+    latex2exp
 URL: https://github.com/simonecollier/lizardHMM
 BugReports: https://github.com/simonecollier/lizardHMM/issues
 LinkingTo: 

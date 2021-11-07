@@ -59,7 +59,7 @@ gam0_forecast_psr <- function(x, hmm, state_dep_dist_pooled = FALSE) {
     for (t in 2:num_time) {
       c <- max(la[[i]][, t - 1])
       a <- exp(la[[i]][, t - 1] - c)
-      if (num_covariates != 0) {
+      if (hmm$num_covariates != 0) {
         if (t %in% ind_step) {
           forecast_psr[[i]][t] <- stats::qnorm(t(a) %*%
                                                  (hmm$gamma[[i]][, , t]/sum(a))

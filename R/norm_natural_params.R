@@ -17,26 +17,6 @@
 #'
 #' @return A list of the natural parameters.
 #' @export
-#' @examples
-#' ### 1. Get the working parameters
-#' # define values of parameters
-#' num_states     <- 2
-#' num_variables  <- 2
-#' num_subjects   <- 2
-#' num_covariates <- 2
-#' mu             <- list(matrix(c(1, 5, 2, 4), 2, 2, byrow = TRUE),
-#'                        matrix(c(1, 5, 2, 4), 2, 2, byrow = TRUE))
-#' sigma          <- list(matrix(c(1, 2, 1, 1.5), 2, 2, byrow = TRUE),
-#'                        matrix(c(1, 2, 1, 1.5), 2, 2, byrow = TRUE))
-#' beta           <- matrix(c(-2, 0, 0), nrow = 1, ncol = 3)
-#' delta          <- list(c(1/2, 1/2), c(1/2, 1/2))
-#'
-#' #transform to working parametes
-#' working_params <- norm_working_params(num_states, num_variables,
-#'                                       num_subjects, mu, sigma, beta, delta)
-#' ### 2. Transform working_params to natural
-#' norm_natural_params(num_states, num_variables, num_subjects, num_covariates,
-#'                     working_params, state_dep_dist_pooled = FALSE)
 norm_natural_params <- function(num_states, num_variables, num_subjects,
                                 num_covariates, working_params,
                                 state_dep_dist_pooled = FALSE) {
